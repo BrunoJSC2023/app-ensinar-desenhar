@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ateliê Tab5 — aprenda a desenhar</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f6f1e7;--card:#fffdf8;--ink:#2a2420;--muted:#7a6f66;--line:#e6ddcd;--accent:#c8553d;--guide:#5b9bd5;--ok:#3a9d6a;--warn:#d9902f;--bad:#c8553d}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:'Nunito Sans',system-ui,sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+.app{display:grid;grid-template-rows:56px 1fr;height:100vh;height:100dvh}
+header{display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--card)}
+h1{font-family:Fraunces,serif;font-size:20px;margin:0;white-space:nowrap}
+h1 span{color:var(--accent)}
+.sp{flex:1}
+button,select{font:inherit;color:inherit}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.pill{font-weight:800;font-size:14px;padding:6px 12px;border-radius:999px;background:#fbe9e2;color:var(--accent);white-space:nowrap}
+#lessonSel{display:none;max-width:46vw;border:1px solid var(--line);border-radius:10px;padding:6px 8px;background:var(--card)}
+.body{display:grid;grid-template-columns:220px 1fr 340px;min-height:0}
+nav{overflow:auto;border-right:1px solid var(--line);padding:12px 10px}
+nav h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 6px 6px}
+nav h3:first-child{margin-top:2px}
+.li{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;padding:9px 8px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px}
+.li.cur{background:var(--card);box-shadow:0 1px 0 var(--line),0 0 0 1px var(--line)}
+.li .n{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;border:1.5px solid var(--line);color:var(--muted)}
+.li.done .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.routine{margin:18px 6px 6px;padding:12px;border-radius:12px;background:var(--card);border:1px dashed var(--line);font-size:13px;line-height:1.45;color:var(--muted)}
+.routine b{color:var(--ink)}
+.routine a{color:var(--accent);font-weight:700}
+.stage{position:relative;min-height:0;min-width:0;overflow:hidden}
+#cv{position:absolute;inset:0;touch-action:none;display:block}
+.tools{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:6px;flex-wrap:wrap;z-index:2;pointer-events:none}
+.tools>*{pointer-events:auto}
+.tools .btn{box-shadow:0 2px 8px rgba(42,36,32,.08)}
+.size{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700}
+.size input{width:90px;accent-color:var(--accent)}
+aside{overflow:auto;border-left:1px solid var(--line);padding:16px 18px 28px;background:var(--card)}
+.mod{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:800}
+h2{font-family:Fraunces,serif;font-size:24px;margin:4px 0 6px}
+.why{color:var(--muted);margin:0 0 12px;line-height:1.45;font-size:14px}
+.task{background:#eef5fc;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;margin-bottom:12px}
+.task b{color:#2f6ea8}
+.fb{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;min-height:74px}
+.fb .ph{color:var(--muted);font-size:14px}
+.score{display:flex;align-items:baseline;gap:8px}
+.score .big{font-family:Fraunces,serif;font-size:44px;line-height:1;font-weight:700}
+.score .lab{font-weight:800;font-size:14px}
+.bar{height:8px;border-radius:99px;background:#efe8db;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px}
+.part{display:grid;grid-template-columns:90px 1fr 30px;gap:8px;align-items:center;font-size:13px;margin-top:6px}
+.part span:last-child{text-align:right;font-weight:700}
+.msgs{margin:10px 0 0;padding-left:18px;font-size:14px;line-height:1.45}
+.msgs li{margin-bottom:4px}
+.legend{font-size:12px;color:var(--muted);margin-top:6px}
+.prog{font-size:13px;margin-bottom:14px}
+.prog .row{display:flex;justify-content:space-between;margin-bottom:6px;gap:8px}
+.done-badge{display:inline-block;background:var(--ok);color:#fff;border-radius:999px;padding:3px 10px;font-weight:800;font-size:12px}
+details{margin-bottom:12px}
+summary{font-weight:800;cursor:pointer;font-size:14px;padding:4px 0}
+#pTheory{padding-left:18px;margin:6px 0;font-size:14px;line-height:1.5}
+#pTheory li{margin-bottom:6px}
+.tip{background:#fbf3e3;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.5}
+.tip b{display:block;margin-bottom:2px}
+.extra{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.obj{width:100%;font-family:Fraunces,serif;font-size:22px;text-align:center;padding:10px;border-radius:12px;background:var(--paper)}
+.ai{border-radius:14px;padding:12px;margin-bottom:12px;background:#eef5fc;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.ai b{display:block;color:#2f6ea8;margin-bottom:4px}
+.modal{position:fixed;inset:0;background:rgba(42,36,32,.4);display:grid;place-items:center;z-index:10;padding:16px}
+.modal[hidden]{display:none}
+.dlg{background:var(--card);border-radius:18px;padding:20px;max-width:440px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.2);-webkit-user-select:text;user-select:text}
+.dlg a{color:var(--accent);font-weight:700}
+.fl{display:block;font-weight:700;font-size:13px;margin-bottom:10px}
+.fl input{display:block;width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;-webkit-user-select:text;user-select:text}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;transition:.25s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:1100px){.body{grid-template-columns:190px 1fr 300px}}
+@media (max-width:900px){
+ .body{grid-template-columns:1fr;grid-template-rows:64vh auto;overflow:auto}
+ nav{display:none}
+ aside{border-left:0;border-top:1px solid var(--line);overflow:visible}
+ #lessonSel{display:block}
+ h1 small{display:none}
+}
+@media (max-width:560px){h1{font-size:16px}.pill{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+ <header>
+  <h1>Ateliê <span>Tab5</span> <small style="font-weight:600;font-size:13px;color:var(--muted);font-family:'Nunito Sans'">· aprenda a desenhar</small></h1>
+  <select id="lessonSel" aria-label="Lição"></select>
+  <div class="sp"></div>
+  <div class="pill" id="streak">🔥 0 dias</div>
+  <button class="btn" id="timerBtn">⏱ Aquecimento 10 min</button>
+  <button class="btn" id="bCfg" title="Configurar professor (Gemini)">⚙</button>
+ </header>
+ <div class="body">
+  <nav id="nav"></nav>
+  <div class="stage" id="stage">
+   <canvas id="cv"></canvas>
+   <div class="tools">
+    <button class="btn" id="bNew">↻ Nova guia</button>
+    <button class="btn" id="bUndo">↶ Desfazer</button>
+    <button class="btn" id="bClear">Limpar</button>
+    <button class="btn primary" id="bEval">✓ Avaliar</button>
+    <button class="btn" id="bAsk" style="background:#2f6ea8;border-color:#2f6ea8;color:#fff">🧑‍🏫 Professor</button>
+    <button class="btn" id="bPen"title="Ignora toques da mão na tela">✍ Só caneta</button>
+    <label class="size">Traço <input type="range" id="bSize" min="1" max="10" value="3"></label>
+   </div>
+  </div>
+  <aside id="panel">
+   <div class="mod" id="pMod"></div>
+   <h2 id="pTitle"></h2>
+   <p class="why" id="pWhy"></p>
+   <div class="task" id="pTask"></div>
+   <div class="extra" id="pExtra"></div>
+   <div class="fb" id="fb"></div>
+   <div class="ai" id="ai" style="display:none"></div>
+   <div class="prog" id="prog"></div>
+   <details open><summary>Teoria rápida</summary><ul id="pTheory"></ul></details>
+   <div class="tip" id="pTip"></div>
+  </aside>
+ </div>
+</div>
+<div id="toast"></div>
+<div id="cfg" class="modal" hidden>
+ <div class="dlg">
+  <h2 style="font-size:20px">Professor com IA</h2>
+  <p class="why">Dentro do claude.ai o professor usa o Claude da sua conta, sem configurar nada. Fora dele (ex.: GitHub Pages), cole aqui uma chave gratuita do <b>Gemini</b>. Ela fica salva só neste navegador.</p>
+  <label class="fl">Chave da API do Gemini<input id="cKey" type="password" autocomplete="off" placeholder="AIza…"></label>
+  <label class="fl">Modelo<input id="cModel" type="text" autocomplete="off" placeholder="gemini-2.5-flash"></label>
+  <p class="why" style="font-size:13px">Crie a chave em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. Não compartilhe a chave nem a coloque no código do repositório.</p>
+  <div class="extra"><button class="btn primary" id="cSave">Salvar</button><button class="btn" id="cDel">Remover chave</button><button class="btn" id="cClose">Fechar</button></div>
+ </div>
+</div>
+<script>
+// ---------- conteúdo ----------
+const LESSONS=[
+{id:'caneta',mod:'1 · Primeiros passos',title:'Conheça a caneta',kind:'free',goal:{strokes:20},
+ why:'Antes de desenhar, seu cérebro precisa se acostumar com a caneta deslizando na tela lisa.',
+ task:'Faça <b>20 traços livres</b>: espirais, zigue-zagues, rabiscos. Varie velocidade e pressão e veja o traço engrossar.',
+ theory:['Segure a caneta um pouco mais longe da ponta do que um lápis: dá mais liberdade de movimento.','Pode apoiar a mão na tela: quando a caneta é detectada, esta página ignora o toque da palma.','Três articulações: <b>pulso</b> (detalhes), <b>cotovelo</b> (traços médios), <b>ombro</b> (traços longos). Iniciante usa só o pulso; aqui você vai treinar os três.','Não existe traço errado nesta lição. É só pra sentir a ferramenta.'],
+ tip:'A Xiaomi Smart Pen sente vários níveis de pressão. Se a tela parecer escorregadia, uma película fosca (tipo papel) dá atrito e melhora muito o controle. Pra desenhar fora daqui: <b>Ibis Paint X</b> (grátis) e <b>Infinite Painter</b> são ótimos pra começar; <b>Krita</b> é grátis e mais completo.'},
+{id:'linhas',mod:'1 · Primeiros passos',title:'Linhas retas',kind:'lines',goal:{n:10,min:70},
+ why:'Linha confiante é a base de tudo: contorno, perspectiva, hachura.',
+ task:'Ligue os <b>dois pontos azuis</b> com um único traço. Depois de cada nota, encoste de novo pra ganhar uma nova dupla.',
+ theory:['<b>Método do fantasma</b>: posicione a caneta no ponto inicial, faça o movimento no ar 2–3 vezes olhando o ponto final, e só então encoste e risque de uma vez.','Velocidade vence lentidão. Linha lenta treme; linha rápida sai reta.','Trave o pulso e mova a partir do ombro.','Nunca "conserte" passando por cima. Errou? Próxima.'],
+ tip:'Gire o tablet até o traço ficar num ângulo confortável. No digital, girar o canvas é normal; nos apps você gira com dois dedos.'},
+{id:'pressao',mod:'1 · Primeiros passos',title:'Controle de pressão',kind:'pressure',goal:{n:8,min:65},
+ why:'Variar a espessura dá vida ao traço. É o que separa o desenho digital "duro" do expressivo.',
+ task:'Faça um traço da <b>esquerda pra direita</b> seguindo a cunha azul: leve onde ela é fina, forte onde é grossa. O gráfico verde mostra sua pressão.',
+ theory:['Pressão leve = traço fino e claro, ideal pro esboço. Pressão forte = traço escuro, pra linha final.','Mude a força aos poucos, como quem gira um botão de volume.','Este exercício precisa da caneta: dedo não tem pressão.'],
+ tip:'Nos apps de desenho, confira nas opções do pincel se o tamanho ou a opacidade respondem à pressão. Sem isso a caneta vira um "dedo caro".'},
+{id:'circulos',mod:'2 · Formas',title:'Círculos',kind:'circles',goal:{n:10,min:70},
+ why:'Círculos aparecem em tudo, de olhos a rodas, e treinam o movimento do ombro.',
+ task:'Desenhe um círculo em cima da <b>guia tracejada</b>, num traço só.',
+ theory:['Desenhe com o ombro e rápido. Círculo lento vira batata.','Faça 2 voltas no ar, encoste na terceira e termine passando um pouco do ponto inicial.','Pequenas irregularidades são normais; foque em fechar e acertar o tamanho.'],
+ tip:'Se o app tiver "segurar pra virar forma perfeita", evite durante o treino: esconde seu progresso. Use depois, na arte final.'},
+{id:'elipses',mod:'2 · Formas',title:'Elipses',kind:'ellipses',goal:{n:10,min:70},
+ why:'Elipse é um círculo visto em perspectiva: tá em copos, rodas, cilindros.',
+ task:'Desenhe a elipse sobre a guia. As linhas dos <b>eixos</b> ajudam a orientar.',
+ theory:['Toda elipse tem eixo maior e eixo menor, perpendiculares e simétricos.','As pontas são sempre arredondadas. Elipse nunca tem "bico".','Mesmo método do círculo: fantasma, traço rápido, até duas voltas leves.'],
+ tip:'Elipses muito inclinadas são difíceis. Gire o tablet pra deixar o eixo maior num ângulo confortável pro seu braço.'},
+{id:'hachura',mod:'2 · Formas',title:'Hachura',kind:'hatch',goal:{n:5,min:70},manual:true,
+ why:'Hachura cria sombra e textura usando linhas paralelas.',
+ task:'Preencha a caixa com <b>pelo menos 5 linhas</b> na direção do traço azul de exemplo. Depois toque em <b>✓ Avaliar</b>.',
+ theory:['Linhas paralelas: mesma direção, mesmo espaçamento.','Olhe pra linha anterior, não pra caneta. Ela é sua régua.','Comece e termine nas bordas da área.'],
+ tip:'Cada pessoa tem uma direção de hachura natural. Gire o tablet pra fazer a direção pedida com esse mesmo movimento.'},
+{id:'persp',mod:'3 · Volume e perspectiva',title:'Perspectiva de 1 ponto',kind:'persp',goal:{n:10,min:70},
+ why:'Perspectiva é o que faz um desenho parecer ter profundidade.',
+ task:'Do <b>ponto azul</b>, trace uma linha reta em direção ao <b>PF</b> (ponto de fuga). Não precisa chegar até ele.',
+ theory:['Linha do horizonte = altura dos seus olhos.','Linhas que vão "pro fundo" convergem num ponto de fuga no horizonte.','Verticais continuam verticais; horizontais de frente continuam horizontais.'],
+ tip:'Olhe pro PF enquanto risca, não pra ponta da caneta. A mão segue o olhar.'},
+{id:'formas',mod:'3 · Volume e perspectiva',title:'Formas em volume',kind:'trace',goal:{n:4,min:70},manual:true,
+ why:'Tudo que você vai desenhar é uma combinação de cubos, cilindros, cones e esferas.',
+ task:'Cubra a forma da guia com traços firmes. Ao terminar, toque em <b>✓ Avaliar</b>. Cada avaliação traz uma forma nova.',
+ theory:['Desenhe as linhas escondidas também ("através" da forma): isso treina pensar em 3D.','Prefira traços longos e confiantes a vários traços curtinhos.','Comece pelas linhas mais longas e estruturais.'],
+ tip:'Nos apps, faça esse treino numa camada e tente redesenhar a mesma forma ao lado sem guia.'},
+{id:'objeto',mod:'4 · Aplicando',title:'Estudo de objeto',kind:'study',goal:{sessions:3},
+ why:'Agora junte tudo: desenhe objetos reais olhando pra eles.',
+ task:'Sorteie um objeto, pegue ele em casa, coloque na sua frente, inicie o timer de 5 min e desenhe. Faça <b>3 sessões</b>.',
+ theory:['Primeiro encontre as formas básicas (caneca = cilindro + alça).','Esboce leve, com pouca pressão; depois reforce o contorno final com mais pressão.','5 minutos por objeto. Não busque perfeição, busque observar.'],
+ tip:'Em estudos mais longos, use camadas no app: uma pro esboço (opacidade baixa) e outra pra linha final.'}
+];
+const OBJECTS=['caneca','garrafa','livro aberto','celular','tênis','controle remoto','copo','maçã','cadeira','luminária','chaves','mochila','óculos','panela','tesoura','almofada'];
+const GUIDE='#5b9bd5',OK='#3a9d6a',INK='#2a2420';
+
+// ---------- util ----------
+const $=s=>document.querySelector(s);
+const clamp=v=>Math.max(0,Math.min(100,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const avg=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:0;
+const sd=a=>{const m=avg(a);return Math.sqrt(avg(a.map(v=>(v-m)**2)))};
+function lineDev(pts){const a=pts[0],b=pts[pts.length-1];const L=dist(a,b)||1;let mx=0;for(const p of pts){const d=Math.abs((b.x-a.x)*(a.y-p.y)-(a.x-p.x)*(b.y-a.y))/L;if(d>mx)mx=d}return{max:mx,L,rel:mx/L}}
+function sLen(pts){let s=0;for(let i=1;i<pts.length;i++)s+=dist(pts[i-1],pts[i]);return s}
+function ranks(a){const r=new Array(a.length);a.map((v,i)=>[v,i]).sort((p,q)=>p[0]-q[0]).forEach((p,k)=>r[p[1]]=k);return r}
+function pearson(a,b){const ma=avg(a),mb=avg(b);let n=0,da=0,db=0;for(let i=0;i<a.length;i++){const x=a[i]-ma,y=b[i]-mb;n+=x*y;da+=x*x;db+=y*y}return da&&db?n/Math.sqrt(da*db):0}
+function fitCircle(pts){const n=pts.length,mx=avg(pts.map(p=>p.x)),my=avg(pts.map(p=>p.y));let Suu=0,Svv=0,Suv=0,Suuu=0,Svvv=0,Suvv=0,Svuu=0;for(const p of pts){const u=p.x-mx,v=p.y-my;Suu+=u*u;Svv+=v*v;Suv+=u*v;Suuu+=u*u*u;Svvv+=v*v*v;Suvv+=u*v*v;Svuu+=v*u*u}const det=Suu*Svv-Suv*Suv;if(Math.abs(det)<1e-9)return null;const b1=(Suuu+Suvv)/2,b2=(Svvv+Svuu)/2;const uc=(b1*Svv-b2*Suv)/det,vc=(Suu*b2-Suv*b1)/det;return{x:uc+mx,y:vc+my,r:Math.sqrt(uc*uc+vc*vc+(Suu+Svv)/n)}}
+function sweepDeg(pts,c){let tot=0,prev=Math.atan2(pts[0].y-c.y,pts[0].x-c.x);for(let i=1;i<pts.length;i++){const a=Math.atan2(pts[i].y-c.y,pts[i].x-c.x);let d=a-prev;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;tot+=d;prev=a}return Math.abs(tot)*180/Math.PI}
+function axialDiff(a,b){return((a-b+90)%180+180)%180-90}
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600)}
+
+// ---------- persistência (opcional) ----------
+const KEY='atelieTab5.v1';
+let P={l:{},days:[]};
+try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);P.l=o.l||{};P.days=o.days||[];P.last=o.last}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+function rec(L){return P.l[L.id]||(P.l[L.id]={scores:[],done:false,strokes:0,sessions:0})}
+function fmt(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function markDay(){const t=fmt(new Date());if(!P.days.includes(t)){P.days.push(t);save();renderStreak()}}
+function streak(){const s=new Set(P.days),d=new Date();let n=0;if(!s.has(fmt(d)))d.setDate(d.getDate()-1);while(s.has(fmt(d))){n++;d.setDate(d.getDate()-1)}return n}
+function renderStreak(){const n=streak();$('#streak').textContent='🔥 '+n+(n===1?' dia':' dias')}
+
+// ---------- estado ----------
+const cv=$('#cv'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1,G=null;
+const S={li:0,strokes:[],cur:null,feedback:null,info:'',scored:false,penOnly:false,penSeen:false,shape:0,vp:null,obj:null};
+const lesson=()=>LESSONS[S.li];
+
+// ---------- desenho ----------
+function dot(c,x,y,col,r=7){c.beginPath();c.arc(x,y,r,0,7);c.fillStyle=col;c.fill();c.beginPath();c.arc(x,y,r+7,0,7);c.strokeStyle=col;c.globalAlpha=.35;c.lineWidth=2;c.stroke();c.globalAlpha=1}
+function poly(c,pts,close){c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));if(close)c.closePath();c.stroke()}
+function label(c,t,x,y,col=GUIDE,al='left'){c.font='700 14px "Nunito Sans",sans-serif';c.fillStyle=col;c.textAlign=al;c.fillText(t,x,y)}
+function drawStroke(s){const base=+$('#bSize').value;const pts=s.pts;ctx.strokeStyle=INK;ctx.lineCap='round';ctx.lineJoin='round';
+ if(s.type!=='pen'){ctx.lineWidth=base*1.2;poly(ctx,pts);return}
+ for(let i=1;i<pts.length;i++){ctx.lineWidth=base*(.25+1.6*((pts[i].p+pts[i-1].p)/2));ctx.beginPath();ctx.moveTo(pts[i-1].x,pts[i-1].y);ctx.lineTo(pts[i].x,pts[i].y);ctx.stroke()}}
+let raf=0;function req(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render()})}
+function render(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#fcf9f2';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(42,36,32,.07)';for(let x=16;x<W;x+=32)for(let y=16;y<H;y+=32)ctx.fillRect(x-1,y-1,2,2);
+ const ex=EX[lesson().kind];ctx.save();ex.draw&&ex.draw(ctx);ctx.restore();ctx.setLineDash([]);
+ for(const s of S.strokes)drawStroke(s);if(S.cur)drawStroke(S.cur);
+ if(S.feedback&&S.feedback.ideal){ctx.save();S.feedback.ideal(ctx);ctx.restore()}}
+
+// ---------- exercícios ----------
+const EX={
+free:{},study:{},
+lines:{
+ newGuide(){const m=60,mn=Math.min(W,H);for(let i=0;i<80;i++){const L=rand(mn*.3,mn*.75),an=rand(0,Math.PI*2),a={x:rand(m,W-m),y:rand(m+50,H-m)},b={x:a.x+Math.cos(an)*L,y:a.y+Math.sin(an)*L};if(b.x>m&&b.x<W-m&&b.y>m+50&&b.y<H-m){G={a,b};return}}G={a:{x:W*.25,y:H*.6},b:{x:W*.75,y:H*.4}}},
+ draw(c){dot(c,G.a.x,G.a.y,GUIDE);dot(c,G.b.x,G.b.y,GUIDE)},
+ stroke(s){const p=s.pts,f=p[0],l=p[p.length-1];const dv=lineDev(p);if(dv.L<25)return{skip:true,msg:'Traço curto demais: ligue os dois pontos.'};
+  const e=Math.min((dist(f,G.a)+dist(l,G.b))/2,(dist(f,G.b)+dist(l,G.a))/2);
+  const straight=clamp(100-dv.rel*700),acc=clamp(100-e*1.6),speed=dv.L/Math.max(1,l.t-f.t);
+  const m=[];if(straight<70)m.push(speed<.45?'Traço lento treme. Faça o movimento mais rápido e confiante; a precisão vem com a repetição.':'A linha curvou. Trave o pulso e mova o braço a partir do ombro.');
+  if(acc<70)m.push('Errou o alvo. Antes de encostar, fantasmeie: passe a caneta no ar 2–3 vezes olhando o ponto final.');
+  const sc=.6*straight+.4*acc;if(!m.length)m.push(sc>=85?'Excelente! Firme e no alvo.':'Bom traço. Agora é repetir pra ganhar consistência.');
+  return{score:sc,parts:{'Retidão':straight,'Precisão':acc},msgs:m,ideal:c=>{c.strokeStyle=OK;c.lineWidth=2;c.setLineDash([6,6]);poly(c,[G.a,G.b])}}}
+},
+pressure:{
+ newGuide(){G={x1:W*.12,x2:W*.88,y:H*rand(.32,.5),inc:Math.random()<.6}},
+ draw(c){const{x1,x2,y,inc}=G,hw=18;c.fillStyle=GUIDE;c.globalAlpha=.22;c.beginPath();if(inc){c.moveTo(x1,y-1);c.lineTo(x2,y-hw);c.lineTo(x2,y+hw);c.lineTo(x1,y+1)}else{c.moveTo(x1,y-hw);c.lineTo(x2,y-1);c.lineTo(x2,y+1);c.lineTo(x1,y+hw)}c.closePath();c.fill();c.globalAlpha=1;
+  label(c,inc?'leve':'forte',x1,y-28);label(c,inc?'forte':'leve',x2,y-28,GUIDE,'right');label(c,'→',(x1+x2)/2,y-28,GUIDE,'center')},
+ stroke(s){if(s.type!=='pen')return{skip:true,msg:'Esse exercício precisa da caneta: dedo e mouse não têm pressão.'};
+  const ps=s.pts.map(p=>p.p);if(sd(ps)<.015)return{skip:true,msg:'Não detectei variação de pressão. Confira se a caneta tá pareada e use o Chrome.'};
+  const sm=ps.map((_,i)=>avg(ps.slice(Math.max(0,i-3),i+4))),xs=s.pts.map(p=>p.x);
+  const rho=pearson(ranks(xs),ranks(sm)),mono=clamp(rho*(G.inc?1:-1)*100);
+  const rg=Math.max(...sm)-Math.min(...sm),rangeS=clamp(rg/.5*100);
+  const cov=clamp((Math.max(...xs)-Math.min(...xs))/(G.x2-G.x1)*100);
+  const m=[];if(mono<70)m.push(rho*(G.inc?1:-1)<0?'A pressão foi no sentido contrário. Siga a cunha: '+(G.inc?'comece leve e termine forte.':'comece forte e termine leve.'):'A pressão oscilou. Mude a força aos poucos, de forma contínua.');
+  if(rangeS<70)m.push('Variação pequena. Comece quase sem encostar e termine apertando bem (ou o contrário).');
+  if(cov<70)m.push('Percorra a cunha inteira, de ponta a ponta.');
+  const sc=.55*mono+.3*rangeS+.15*cov;if(!m.length)m.push('Ótimo controle! A curva verde subiu/desceu suave.');
+  const pts=s.pts,sx=sm;return{score:sc,parts:{'Gradual':mono,'Amplitude':rangeS,'Extensão':cov},msgs:m,ideal:c=>{const gy=G.y+50,gh=70;c.strokeStyle='rgba(42,36,32,.15)';c.lineWidth=1;c.strokeRect(G.x1,gy,G.x2-G.x1,gh);
+   c.setLineDash([5,5]);c.strokeStyle=GUIDE;poly(c,G.inc?[{x:G.x1,y:gy+gh},{x:G.x2,y:gy}]:[{x:G.x1,y:gy},{x:G.x2,y:gy+gh}]);c.setLineDash([]);
+   c.strokeStyle=OK;c.lineWidth=2.5;poly(c,pts.map((p,i)=>({x:p.x,y:gy+gh-Math.min(1,sx[i])*gh})));label(c,'sua pressão',G.x1,gy+gh+18,OK)}}}
+},
+circles:{
+ newGuide(){const mn=Math.min(W,H),R=rand(mn*.12,mn*.28);G={c:{x:rand(R+30,W-R-30),y:rand(R+70,H-R-30)},R}},
+ draw(c){c.strokeStyle=GUIDE;c.lineWidth=2;c.setLineDash([8,8]);c.beginPath();c.arc(G.c.x,G.c.y,G.R,0,7);c.stroke();c.setLineDash([]);c.beginPath();c.moveTo(G.c.x-6,G.c.y);c.lineTo(G.c.x+6,G.c.y);c.moveTo(G.c.x,G.c.y-6);c.lineTo(G.c.x,G.c.y+6);c.stroke()},
+ stroke(s){const p=s.pts;if(p.length<10||sLen(p)<60)return{skip:true,msg:'Traço curto demais: faça a volta completa.'};const f=fitCircle(p);if(!f)return{skip:true,msg:'Não reconheci um círculo. Tenta de novo!'};
+  const rs=p.map(q=>dist(q,f)),round=clamp(100-(sd(rs)/f.r)*600);
+  const sw=sweepDeg(p,f);let close=clamp(100-dist(p[0],p[p.length-1])/f.r*120);if(sw>=355)close=100;else if(sw<330)close=Math.min(close,sw/360*100);
+  const acc=clamp(100-(dist(f,G.c)+Math.abs(f.r-G.R))/G.R*150);
+  const m=[];if(round<70)m.push('Formato irregular. Gire o braço todo (ombro) e desenhe mais rápido. Fantasmeie 2 voltas antes.');
+  if(close<70)m.push('Não fechou. Termine passando um pouquinho do ponto inicial.');
+  if(acc<70)m.push('Tamanho ou posição fora da guia. Mire nos 4 "cantos" do círculo: topo, base e laterais.');
+  const sc=.5*round+.2*close+.3*acc;if(!m.length)m.push(sc>=85?'Lindo círculo!':'Bom! Continue repetindo.');
+  return{score:sc,parts:{'Redondo':round,'Fechamento':close,'Na guia':acc},msgs:m,ideal:c=>{c.strokeStyle=OK;c.lineWidth=2;c.beginPath();c.arc(G.c.x,G.c.y,G.R,0,7);c.stroke()}}}
+},
+ellipses:{
+ newGuide(){const mn=Math.min(W,H),a=rand(mn*.14,mn*.3),b=a*rand(.3,.7);G={c:{x:rand(a+30,W-a-30),y:rand(a+70,H-a-30)},a,b,rot:rand(0,Math.PI)}},
+ draw(c){const{c:o,a,b,rot}=G;c.strokeStyle=GUIDE;c.lineWidth=2;c.setLineDash([8,8]);c.beginPath();c.ellipse(o.x,o.y,a,b,rot,0,7);c.stroke();c.globalAlpha=.45;c.setLineDash([3,6]);c.beginPath();c.moveTo(o.x-Math.cos(rot)*a*1.15,o.y-Math.sin(rot)*a*1.15);c.lineTo(o.x+Math.cos(rot)*a*1.15,o.y+Math.sin(rot)*a*1.15);c.moveTo(o.x+Math.sin(rot)*b*1.3,o.y-Math.cos(rot)*b*1.3);c.lineTo(o.x-Math.sin(rot)*b*1.3,o.y+Math.cos(rot)*b*1.3);c.stroke();c.globalAlpha=1},
+ stroke(s){const p=s.pts;if(p.length<10||sLen(p)<60)return{skip:true,msg:'Traço curto demais: faça a volta completa.'};
+  const{c:o,a,b,rot}=G,co=Math.cos(-rot),si=Math.sin(-rot);const bins=new Set();const errs=p.map(q=>{const dx=q.x-o.x,dy=q.y-o.y,x=dx*co-dy*si,y=dx*si+dy*co;bins.add(Math.floor(((Math.atan2(y/b,x/a)+Math.PI)/(2*Math.PI))*16)%16);return Math.abs(Math.hypot(x/a,y/b)-1)});
+  const fit=clamp(100-avg(errs)*500),cov=clamp(bins.size/16*100);
+  const m=[];if(fit<70)m.push('A elipse saiu da guia. Pense nos dois eixos; as pontas são arredondadas, nunca pontudas.');if(cov<85)m.push('Complete a volta inteira (ou faça duas voltas leves).');
+  const sc=.75*fit+.25*cov;if(!m.length)m.push(sc>=85?'Elipse muito bem feita!':'Boa! Repita pra firmar.');
+  return{score:sc,parts:{'Encaixe':fit,'Volta completa':cov},msgs:m,ideal:c=>{c.strokeStyle=OK;c.lineWidth=2;c.beginPath();c.ellipse(o.x,o.y,a,b,rot,0,7);c.stroke()}}}
+},
+hatch:{
+ newGuide(){const w=Math.min(W*.45,380),h=w*.7;G={x:rand(30,W-w-30),y:rand(80,Math.max(81,H-h-30)),w,h,ang:[45,135,0,90,30,150][Math.floor(Math.random()*6)]}},
+ draw(c){c.strokeStyle=GUIDE;c.lineWidth=2;c.setLineDash([8,8]);c.strokeRect(G.x,G.y,G.w,G.h);c.setLineDash([]);const r=G.ang*Math.PI/180,cx=G.x+G.w+0,cy=G.y-22,L=22;c.lineWidth=3;c.beginPath();c.moveTo(G.x+20-Math.cos(r)*L,cy-Math.sin(r)*L*.6);c.lineTo(G.x+20+Math.cos(r)*L,cy+Math.sin(r)*L*.6);c.stroke();label(c,'direção',G.x+52,cy+5)},
+ stroke(){const n=S.strokes.length;return{info:n<5?`${n} linha${n===1?'':'s'}: faça pelo menos 5.`:`${n} linhas. Toque em ✓ Avaliar quando terminar.`}},
+ evaluate(){const ss=S.strokes.filter(s=>lineDev(s.pts).L>15);if(ss.length<5){toast('Faça pelo menos 5 linhas antes de avaliar.');return null}
+  const angs=ss.map(s=>{const a=s.pts[0],b=s.pts[s.pts.length-1];return((Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI)%180+180)%180});
+  const mc=avg(angs.map(t=>Math.cos(t*Math.PI/90))),ms=avg(angs.map(t=>Math.sin(t*Math.PI/90)));const mean=((Math.atan2(ms,mc)*90/Math.PI)+180)%180;
+  const dev=sd(angs.map(t=>axialDiff(t,mean))),tErr=Math.abs(axialDiff(mean,G.ang));
+  const angS=clamp(100-dev*6-Math.max(0,tErr-6)*2.5);
+  const mr=mean*Math.PI/180,nx=-Math.sin(mr),ny=Math.cos(mr);const pr=ss.map(s=>{const a=s.pts[0],b=s.pts[s.pts.length-1];return((a.x+b.x)/2)*nx+((a.y+b.y)/2)*ny}).sort((a,b)=>a-b);
+  const gaps=pr.slice(1).map((v,i)=>v-pr[i]);const cv=avg(gaps)>1?sd(gaps)/avg(gaps):1;const spS=clamp(100-cv*150);
+  const all=ss.flatMap(s=>s.pts),inS=clamp(all.filter(p=>p.x>G.x-12&&p.x<G.x+G.w+12&&p.y>G.y-12&&p.y<G.y+G.h+12).length/all.length*100);
+  const m=[];if(angS<70)m.push(tErr>12?'A direção ficou diferente do exemplo azul. Gire o tablet pra fazer esse ângulo com seu movimento natural.':'Os ângulos variaram entre as linhas. Olhe sempre pra linha anterior antes de riscar.');
+  if(spS<70)m.push('Espaçamento irregular. Use a linha anterior como régua.');if(inS<80)m.push('Comece e termine nas bordas da caixa.');
+  const sc=.4*angS+.4*spS+.2*inS;if(!m.length)m.push('Hachura limpa e uniforme!');
+  return{score:sc,parts:{'Paralelas':angS,'Espaçamento':spS,'Na área':inS},msgs:m,ideal:c=>{c.beginPath();c.rect(G.x,G.y,G.w,G.h);c.clip();c.strokeStyle=OK;c.globalAlpha=.6;c.lineWidth=1.5;c.setLineDash([4,6]);const k=pr.length,a0=pr[0],a1=pr[k-1],dx=Math.cos(mr),dy=Math.sin(mr);for(let i=0;i<k;i++){const v=a0+(a1-a0)*i/(k-1);c.beginPath();c.moveTo(nx*v-dx*3000,ny*v-dy*3000);c.lineTo(nx*v+dx*3000,ny*v+dy*3000);c.stroke()}}}}
+},
+persp:{
+ newGuide(force){if(force||!S.vp)S.vp={x:W*rand(.35,.65),y:H*rand(.3,.42)};const vp=S.vp;for(let i=0;i<80;i++){const p={x:rand(40,W-40),y:rand(80,H-40)};if(dist(p,vp)>Math.min(W,H)*.25&&Math.abs(p.y-vp.y)>50){G={vp,start:p};return}}G={vp,start:{x:W*.2,y:H*.8}}},
+ draw(c){const{vp,start}=G;c.strokeStyle=GUIDE;c.globalAlpha=.6;c.lineWidth=1.5;poly(c,[{x:0,y:vp.y},{x:W,y:vp.y}]);c.globalAlpha=1;label(c,'horizonte',12,vp.y-8);dot(c,vp.x,vp.y,'#c8553d',6);label(c,'PF',vp.x+14,vp.y-10,'#c8553d');dot(c,start.x,start.y,GUIDE)},
+ stroke(s){const p=s.pts;let f=p[0],l=p[p.length-1];const dv=lineDev(p);if(dv.L<30)return{skip:true,msg:'Traço curto demais.'};
+  if(dist(l,G.start)<dist(f,G.start))[f,l]=[l,f];
+  const d1=Math.atan2(l.y-f.y,l.x-f.x),d2=Math.atan2(G.vp.y-f.y,G.vp.x-f.x);let er=Math.abs(d1-d2)*180/Math.PI;if(er>180)er=360-er;
+  const angS=clamp(100-er*5),st=clamp(100-dv.rel*700),stS=clamp(100-dist(f,G.start)*1.5);
+  const m=[];if(angS<70)m.push('A linha não aponta pro PF. Olhe pro ponto de fuga enquanto risca.');if(st<70)m.push('A linha curvou: traço mais rápido, a partir do ombro.');if(stS<70)m.push('Comece exatamente no ponto azul.');
+  const sc=.55*angS+.3*st+.15*stS;if(!m.length)m.push(sc>=85?'Convergência perfeita!':'Bom! Continue.');
+  return{score:sc,parts:{'Rumo ao PF':angS,'Retidão':st,'Início':stS},msgs:m,ideal:c=>{c.strokeStyle=OK;c.lineWidth=2;c.setLineDash([6,6]);poly(c,[G.start,G.vp])}}}
+},
+trace:{
+ shapes:['Cubo','Cilindro','Cone','Esfera'],
+ newGuide(){const k=S.shape%4,s=Math.min(W,H)*.3,ox=W/2,oy=H/2+25,T=(x,y)=>({x:ox+x*s,y:oy+y*s});const el=(cx,cy,a,b,from=0,to=2*Math.PI)=>{const r=[];for(let i=0;i<=64;i++){const t=from+(to-from)*i/64;r.push(T(cx+Math.cos(t)*a,cy+Math.sin(t)*b))}return r};let L=[];
+  if(k===0){const F=[[-.8,-.2],[.2,-.2],[.2,.8],[-.8,.8]],V=[1,-1.3],B=F.map(([x,y])=>[x+(V[0]-x)*.35,y+(V[1]-y)*.35]);L.push([...F,F[0]].map(q=>T(...q)),[...B,B[0]].map(q=>T(...q)));F.forEach((q,i)=>L.push([T(...q),T(...B[i])]))}
+  if(k===1){L.push(el(0,-.7,.6,.18),el(0,.7,.6,.18),[T(-.6,-.7),T(-.6,.7)],[T(.6,-.7),T(.6,.7)])}
+  if(k===2){L.push(el(0,.7,.65,.2),[T(-.65,.7),T(0,-.85)],[T(.65,.7),T(0,-.85)])}
+  if(k===3){L.push(el(0,0,.8,.8),el(0,0,.8,.25),el(0,0,.3,.8))}
+  const smp=[];for(const pl of L)for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],n=Math.max(1,Math.ceil(dist(a,b)/5));for(let j=0;j<n;j++)smp.push({x:a.x+(b.x-a.x)*j/n,y:a.y+(b.y-a.y)*j/n})}
+  G={lines:L,smp,name:this.shapes[k]}},
+ draw(c){c.strokeStyle=GUIDE;c.globalAlpha=.55;c.lineWidth=2.5;c.setLineDash([]);G.lines.forEach(l=>poly(c,l));c.globalAlpha=1;label(c,G.name,W-16,H-16,GUIDE,'right')},
+ stroke(){return{info:`${S.strokes.length} traço(s). Cubra a forma toda, depois toque em ✓ Avaliar.`}},
+ evaluate(){const all=S.strokes.flatMap(s=>s.pts);if(all.length<10){toast('Cubra a forma antes de avaliar.');return null}
+  const md=all.map(p=>{let m=1e9;for(const q of G.smp){const d=(p.x-q.x)**2+(p.y-q.y)**2;if(d<m)m=d}return Math.sqrt(m)});
+  const cov=G.smp.map(q=>{for(const p of all)if((p.x-q.x)**2+(p.y-q.y)**2<144)return true;return false});
+  const acc=clamp(100-avg(md)*5),covS=clamp(cov.filter(Boolean).length/cov.length*100);
+  const avgLen=avg(S.strokes.map(s=>sLen(s.pts)));
+  const m=[];if(covS<75)m.push('Faltaram partes da forma, inclusive as linhas escondidas. Desenhar "através" treina o 3D.');if(acc<70)m.push('Traços longe da guia. Mais devagar no fantasma, mais firme no traço.');if(avgLen<60&&S.strokes.length>8)m.push('Muitos traços curtinhos. Tente linhas longas e contínuas.');
+  const sc=.55*acc+.45*covS;if(!m.length)m.push(`${G.name} muito bem construído!`);const smp=G.smp;
+  return{score:sc,parts:{'Precisão':acc,'Cobertura':covS},msgs:m,ideal:c=>{smp.forEach((q,i)=>{if(i%2)return;c.fillStyle=cov[i]?OK:'#d9902f';c.globalAlpha=cov[i]?.5:.9;c.fillRect(q.x-2,q.y-2,4,4)});c.globalAlpha=1},legend:'Verde = coberto · laranja = faltou'}}
+}
+};
+
+// ---------- fluxo ----------
+function newAttempt(force){S.strokes=[];S.feedback=null;S.info='';S.scored=false;const ex=EX[lesson().kind];if(force&&lesson().kind==='trace')S.shape++;ex.newGuide&&ex.newGuide(force);renderFeedback();req()}
+function applyResult(r){r.score=Math.round(r.score);S.feedback=r;S.scored=true;S.info='';const L=lesson(),R=rec(L);R.scores.push(r.score);if(R.scores.length>40)R.scores=R.scores.slice(-40);save();checkDone(L);renderFeedback();renderProgress()}
+function checkDone(L){const R=rec(L),g=L.goal;if(R.done)return;let ok=false;if(g.n){const last=R.scores.slice(-g.n);ok=last.length>=g.n&&avg(last)>=g.min}if(g.strokes)ok=R.strokes>=g.strokes;if(g.sessions)ok=R.sessions>=g.sessions;
+ if(ok){R.done=true;save();renderNav();toast('🎉 Lição concluída! '+(S.li<LESSONS.length-1?'Pode seguir pra próxima.':'Trilha completa!'))}}
+function pt(e){const r=cv.getBoundingClientRect();let p=e.pressure;if(e.pointerType!=='pen'||!p)p=.5;return{x:e.clientX-r.left,y:e.clientY-r.top,p,t:e.timeStamp}}
+cv.addEventListener('pointerdown',e=>{
+ if(e.pointerType==='pen'&&!S.penSeen){S.penSeen=true;setPen(true);toast('Caneta detectada ✍ toques da mão serão ignorados')}
+ if(S.penOnly&&e.pointerType==='touch')return;if(e.pointerType==='mouse'&&e.button!==0)return;
+ if(S.cur)return;e.preventDefault();
+ if(S.scored){const k=lesson().kind;if(k==='trace')S.shape++;newAttempt(false)}
+ try{cv.setPointerCapture(e.pointerId)}catch(_){}
+ S.cur={id:e.pointerId,type:e.pointerType,pts:[pt(e)]};req()});
+cv.addEventListener('pointermove',e=>{if(!S.cur||e.pointerId!==S.cur.id)return;const evs=e.getCoalescedEvents?e.getCoalescedEvents():[];(evs.length?evs:[e]).forEach(v=>S.cur.pts.push(pt(v)));req()});
+function finish(e){const s=S.cur;if(!s||e.pointerId!==s.id)return;S.cur=null;if(s.pts.length<3||sLen(s.pts)<6){req();return}
+ S.strokes.push(s);markDay();const L=lesson(),R=rec(L);R.strokes++;save();const ex=EX[L.kind];
+ if(ex.stroke){const r=ex.stroke(s);if(r){if(r.skip){S.strokes.pop();toast(r.msg)}else if(r.info){S.info=r.info;renderFeedback()}else applyResult(r)}}
+ if(L.goal.strokes){checkDone(L);S.info=`${Math.min(R.strokes,L.goal.strokes)}/${L.goal.strokes} traços`;renderFeedback();renderProgress()}
+ req()}
+cv.addEventListener('pointerup',finish);cv.addEventListener('pointercancel',finish);
+cv.addEventListener('contextmenu',e=>e.preventDefault());
+
+function setPen(on){S.penOnly=on;$('#bPen').classList.toggle('on',on)}
+$('#bPen').onclick=()=>{setPen(!S.penOnly);toast(S.penOnly?'Só caneta: toques da mão ignorados':'Toque com o dedo também desenha')};
+$('#bNew').onclick=()=>newAttempt(true);
+$('#bClear').onclick=()=>{S.strokes=[];S.feedback=null;S.scored=false;S.info='';renderFeedback();req()};
+$('#bUndo').onclick=()=>{if(S.scored){toast('Já avaliado. Encoste a caneta pra próxima tentativa.');return}S.strokes.pop();const ex=EX[lesson().kind];if(ex.stroke&&S.strokes.length){const r=ex.stroke(S.strokes[S.strokes.length-1]);if(r&&r.info)S.info=r.info}else S.info='';renderFeedback();req()};
+$('#bEval').onclick=()=>{const ex=EX[lesson().kind];if(!ex.evaluate||S.scored)return;const r=ex.evaluate();if(r){applyResult(r);req()}};
+$('#bSize').oninput=req;
+
+// ---------- painel ----------
+function scoreCol(v){return v>=80?'var(--ok)':v>=60?'var(--warn)':'var(--bad)'}
+function scoreLab(v){return v>=90?'Excelente':v>=80?'Muito bom':v>=70?'Bom':v>=55?'Quase lá':'Continue tentando'}
+function renderFeedback(){const f=S.feedback,el=$('#fb');
+ if(f){el.innerHTML=`<div class="score"><span class="big" style="color:${scoreCol(f.score)}">${f.score}</span><span class="lab">${scoreLab(f.score)}</span></div>`+
+  Object.entries(f.parts||{}).map(([k,v])=>`<div class="part"><span>${k}</span><div class="bar"><i style="width:${Math.round(v)}%;background:${scoreCol(v)}"></i></div><span>${Math.round(v)}</span></div>`).join('')+
+  `<ul class="msgs">${f.msgs.map(m=>`<li>${m}</li>`).join('')}</ul><div class="legend">${f.legend||'Em verde: o ideal.'} Encoste a caneta pra próxima.</div>`}
+ else el.innerHTML=`<div class="ph">${S.info||(['free','study'].includes(lesson().kind)?'Área livre: desenhe à vontade.':'Desenhe na tela pra receber nota e dicas.')}</div>`}
+function spark(sc,min){if(!sc.length)return'';const w=290,h=44,s=sc.slice(-15),x=i=>s.length<2?w/2:6+i*(w-12)/(s.length-1),y=v=>h-4-(v/100)*(h-8);
+ return`<svg width="100%" viewBox="0 0 ${w} ${h}" style="display:block;margin-top:6px">${min?`<line x1="0" x2="${w}" y1="${y(min)}" y2="${y(min)}" stroke="#5b9bd5" stroke-dasharray="4 4" stroke-width="1"/>`:''}<polyline fill="none" stroke="#2a2420" stroke-width="1.5" points="${s.map((v,i)=>x(i)+','+y(v)).join(' ')}"/>${s.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="3" fill="${v>=80?'#3a9d6a':v>=60?'#d9902f':'#c8553d'}"/>`).join('')}</svg>`}
+function renderProgress(){const L=lesson(),R=rec(L),g=L.goal;let h='';
+ if(g.n){const last=R.scores.slice(-g.n),a=Math.round(avg(last));h=`<div class="row"><b>Meta:</b><span>${g.n} tentativas com média ≥ ${g.min}</span></div><div class="bar"><i style="width:${Math.min(100,last.length/g.n*100)}%;background:${last.length>=g.n&&a>=g.min?'var(--ok)':'var(--guide)'}"></i></div><div class="row" style="margin-top:6px"><span>${R.scores.length} tentativa(s) no total</span><span>média recente: <b>${last.length?a:'–'}</b></span></div>${spark(R.scores,g.min)}`}
+ if(g.strokes)h=`<div class="row"><b>Meta:</b><span>${Math.min(R.strokes,g.strokes)}/${g.strokes} traços</span></div><div class="bar"><i style="width:${Math.min(100,R.strokes/g.strokes*100)}%;background:var(--guide)"></i></div>`;
+ if(g.sessions)h=`<div class="row"><b>Meta:</b><span>${Math.min(R.sessions,g.sessions)}/${g.sessions} sessões</span></div><div class="bar"><i style="width:${Math.min(100,R.sessions/g.sessions*100)}%;background:var(--guide)"></i></div>`;
+ if(R.done)h+=`<div style="margin-top:8px"><span class="done-badge">✓ Concluída</span> <span style="color:var(--muted)">continue praticando quando quiser</span></div>`;
+ $('#prog').innerHTML=h}
+function renderExtra(){const L=lesson(),el=$('#pExtra');if(L.kind!=='study'){el.innerHTML='';return}
+ el.innerHTML=`<div class="obj" id="objName">${S.obj||'—'}</div><button class="btn" id="bObj">🎲 Sortear objeto</button><button class="btn" id="bT5">⏱ Timer 5 min</button><button class="btn primary" id="bSess">✓ Terminei a sessão</button>`;
+ $('#bObj').onclick=()=>{let o;do{o=OBJECTS[Math.floor(Math.random()*OBJECTS.length)]}while(o===S.obj&&OBJECTS.length>1);S.obj=o;$('#objName').textContent=o};
+ $('#bT5').onclick=()=>startTimer(5,'Estudo');
+ $('#bSess').onclick=()=>{if(!S.strokes.length){toast('Desenhe o objeto antes de marcar a sessão.');return}const R=rec(L);R.sessions++;save();checkDone(L);renderProgress();toast('Sessão registrada! ('+R.sessions+')');S.strokes=[];req()}}
+function renderNav(){let h='',mod='';LESSONS.forEach((L,i)=>{if(L.mod!==mod){mod=L.mod;h+=`<h3>${mod}</h3>`}h+=`<button class="li ${i===S.li?'cur':''} ${rec(L).done?'done':''}" data-i="${i}"><span class="n">${rec(L).done?'✓':i+1}</span>${L.title}</button>`});
+ h+=`<div class="routine"><b>Rotina diária sugerida</b><br>10 min de aquecimento (linhas, círculos, elipses) + a lição do dia + 5 min de desenho livre. Pouco todo dia vale mais que muito de vez em quando.<br><br>Quer ir além? O curso gratuito <a href="https://drawabox.com" target="_blank" rel="noopener">Drawabox</a> segue a mesma linha.</div>`;
+ $('#nav').innerHTML=h;$('#nav').querySelectorAll('.li').forEach(b=>b.onclick=()=>goLesson(+b.dataset.i));
+ $('#lessonSel').innerHTML=LESSONS.map((L,i)=>`<option value="${i}" ${i===S.li?'selected':''}>${rec(L).done?'✓ ':(i+1)+'. '}${L.title}</option>`).join('')}
+$('#lessonSel').onchange=e=>goLesson(+e.target.value);
+function goLesson(i){S.li=i;$('#ai').style.display='none';P.last=i;save();const L=lesson();
+ $('#pMod').textContent=L.mod;$('#pTitle').textContent=L.title;$('#pWhy').textContent=L.why;$('#pTask').innerHTML=L.task;
+ $('#pTheory').innerHTML=L.theory.map(t=>`<li>${t}</li>`).join('');$('#pTip').innerHTML='<b>📱 No Xiaomi Pad 5</b>'+L.tip;
+ const free=['free','study'].includes(L.kind);$('#bNew').style.display=free?'none':'';$('#bEval').style.display=L.manual?'':'none';
+ S.vp=null;S.obj=S.obj||null;renderNav();renderExtra();renderProgress();newAttempt(true)}
+
+// ---------- timer ----------
+const T={end:0,id:0,label:''};const TDEF='⏱ Aquecimento 10 min';
+function startTimer(min,lab){clearInterval(T.id);T.end=Date.now()+min*60000;T.label=lab;tick();T.id=setInterval(tick,500)}
+function tick(){const left=Math.max(0,T.end-Date.now()),m=Math.floor(left/60000),s=Math.floor(left/1000)%60;$('#timerBtn').textContent=`⏹ ${T.label} ${m}:${String(s).padStart(2,'0')}`;$('#timerBtn').classList.add('on');if(left<=0){clearInterval(T.id);T.id=0;$('#timerBtn').textContent=TDEF;$('#timerBtn').classList.remove('on');toast('⏰ Tempo! Bom trabalho.')}}
+$('#timerBtn').onclick=()=>{if(T.id){clearInterval(T.id);T.id=0;$('#timerBtn').textContent=TDEF;$('#timerBtn').classList.remove('on')}else startTimer(10,'Aquecimento')};
+
+// ---------- tamanho ----------
+function resize(){const r=$('#stage').getBoundingClientRect();if(!r.width||!r.height)return;DPR=window.devicePixelRatio||1;W=r.width;H=r.height;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);cv.style.width=W+'px';cv.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0);S.vp=null;newAttempt(false)}
+let rt;new ResizeObserver(()=>{clearTimeout(rt);rt=setTimeout(resize,80)}).observe($('#stage'));
+// ---------- professor (Claude no claude.ai, Gemini fora dele) ----------
+const CFG_KEY='atelieTab5.gemini';
+function getCfg(){try{return JSON.parse(localStorage.getItem(CFG_KEY)||'{}')}catch(e){return{}}}
+function setCfg(c){try{localStorage.setItem(CFG_KEY,JSON.stringify(c));return true}catch(e){return false}}
+let SAMPLE=null,asking=false;
+(async()=>{try{for(let i=0;i<40&&!(window.claude&&window.claude.use);i++)await new Promise(r=>setTimeout(r,250));if(!window.claude||!window.claude.use)return;const s=await window.claude.use('sample');if(!s)return;if(s.limits){const l=await s.limits();if(l&&!l.images)return}SAMPLE=s}catch(e){}})();
+function openCfg(){const c=getCfg();$('#cKey').value=c.key||'';$('#cModel').value=c.model||'';$('#cfg').hidden=false}
+$('#bCfg').onclick=openCfg;$('#cClose').onclick=()=>$('#cfg').hidden=true;
+$('#cfg').onclick=e=>{if(e.target.id==='cfg')$('#cfg').hidden=true};
+$('#cSave').onclick=()=>{const key=$('#cKey').value.trim(),model=$('#cModel').value.trim();if(!setCfg({key,model})){toast('Este navegador não deixou salvar a chave.');return}$('#cfg').hidden=true;toast(key?'Chave salva neste navegador.':'Sem chave salva.')};
+$('#cDel').onclick=()=>{setCfg({});$('#cKey').value='';toast('Chave removida.')};
+function snapshot(){const max=1280,sc=Math.min(1,max/W),o=document.createElement('canvas');o.width=Math.round(W*sc);o.height=Math.round(H*sc);o.getContext('2d').drawImage(cv,0,0,o.width,o.height);return o}
+function buildPrompt(){const L=lesson(),strip=h=>h.replace(/<[^>]+>/g,'');
+ return`Você é um professor de desenho paciente e direto, ensinando um adulto iniciante que desenha num tablet Xiaomi Pad 5 com caneta.
+Lição atual: "${L.title}". Exercício: ${strip(L.task)}${S.obj?` Objeto sorteado: ${S.obj}.`:''}${S.feedback?` Nota automática desta tentativa: ${S.feedback.score}/100 (${Object.entries(S.feedback.parts).map(([k,v])=>k+' '+Math.round(v)).join(', ')}).`:''}
+Na imagem: guias do exercício em azul, traços do aluno em marrom escuro (mais grossos = mais pressão), e o ideal em verde quando houver.
+Responda em português do Brasil, tom informal e encorajador, sem markdown, no máximo 5 frases curtas: 1 acerto concreto, 2 correções específicas sobre o que você vê (onde e como), e 1 mini-exercício pra próxima tentativa.`}
+async function askGemini(prompt,key,model){const b64=snapshot().toDataURL('image/png').split(',')[1];
+ const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt},{inlineData:{mimeType:'image/png',data:b64}}]}]})});
+ const j=await res.json().catch(()=>({}));
+ if(!res.ok){const msg=(j.error&&j.error.message)||'';throw{code:res.status===429?'rate_limited':res.status===404?'model':(res.status===400||res.status===403)?'key':'http',message:msg}}
+ const t=((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('').trim();if(!t)throw{code:'empty'};return t}
+$('#bAsk').onclick=async()=>{if(asking)return;const cfg=getCfg();
+ if(!SAMPLE&&!cfg.key){openCfg();toast('Configure o professor primeiro.');return}
+ if(!S.strokes.length){toast('Desenhe algo primeiro, aí o professor comenta.');return}
+ asking=true;const box=$('#ai');box.style.display='';box.innerHTML=`<b>🧑‍🏫 Professor${SAMPLE?'':' (Gemini)'}</b><span id="aiT">Olhando seu desenho…</span>`;const out=t=>{const el=$('#aiT');if(el)el.textContent=t};
+ try{const prompt=buildPrompt();
+  if(SAMPLE){const blob=await new Promise(r=>snapshot().toBlob(r,'image/png'));const r=await SAMPLE(prompt,{images:[blob],modelTier:'default',onText:({text})=>out(text)});out(r.text)}
+  else out(await askGemini(prompt,cfg.key,cfg.model||'gemini-2.5-flash'))}
+ catch(e){const c=e&&e.code;out(c==='rate_limited'?'Muitos pedidos seguidos (ou cota grátis esgotada). Espera um pouco e tenta de novo.':c==='key'?'A chave do Gemini foi recusada. Confira em ⚙.':c==='model'?'Modelo não encontrado. Troque o nome do modelo em ⚙.':c==='not_granted'?'Sem permissão pra chamar o professor aqui.':'Não consegui analisar agora. Confira a internet e tenta de novo.')}
+ finally{asking=false}};
+
+renderStreak();
+const start=Number.isInteger(P.last)&&P.last<LESSONS.length?P.last:0;
+resize();goLesson(start);
+</script>
+</body>
+</html>
