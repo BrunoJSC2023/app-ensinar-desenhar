@@ -1,6 +1,6 @@
 # Ateliê Tab5 — aprenda a desenhar
 
-App web (um único `index.html`) para aprender a desenhar do zero num tablet com caneta, pensado para o **Xiaomi Pad 5 + Xiaomi Smart Pen**.
+App web (um único `index.html`) para aprender a desenhar do zero num tablet com caneta, pensado para o **Xiaomi Pad 5 + Xiaomi Smart Pen** e também para celular, como o **Galaxy S23 Ultra + S Pen** (layout vertical e horizontal; botão da S Pen desfaz o último traço).
 
 ## O que tem
 - Trilha de 9 lições: caneta, linhas retas, pressão, círculos, elipses, hachura, perspectiva de 1 ponto, formas em volume e estudo de objeto.

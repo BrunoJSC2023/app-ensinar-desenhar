@@ -9,7 +9,7 @@
 :root{--paper:#f6f1e7;--card:#fffdf8;--ink:#2a2420;--muted:#7a6f66;--line:#e6ddcd;--accent:#c8553d;--guide:#5b9bd5;--ok:#3a9d6a;--warn:#d9902f;--bad:#c8553d}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:'Nunito Sans',system-ui,sans-serif;-webkit-user-select:none;user-select:none;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
-.app{display:grid;grid-template-rows:56px 1fr;height:100vh;height:100dvh}
+.app{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:56px 1fr;height:100vh;height:100dvh}
 header{display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--line);background:var(--card)}
 h1{font-family:Fraunces,serif;font-size:20px;margin:0;white-space:nowrap}
 h1 span{color:var(--accent)}
@@ -86,7 +86,25 @@ summary{font-weight:800;cursor:pointer;font-size:14px;padding:4px 0}
  #lessonSel{display:block}
  h1 small{display:none}
 }
-@media (max-width:560px){h1{font-size:16px}.pill{display:none}}
+.mini{position:absolute;left:10px;right:10px;bottom:10px;z-index:2;background:rgba(255,253,248,.96);border:1px solid var(--line);border-radius:14px;padding:8px 12px;font-size:13px;line-height:1.35;box-shadow:0 4px 14px rgba(42,36,32,.12);display:flex;gap:10px;align-items:center}
+.mini[hidden]{display:none}
+.mini .big{font-family:Fraunces,serif;font-size:28px;font-weight:700;line-height:1}
+@media (max-width:900px) and (orientation:landscape){
+ .body{grid-template-columns:1fr 290px;grid-template-rows:1fr;overflow:hidden}
+ aside{border-top:0;border-left:1px solid var(--line);overflow:auto}
+ .mini{display:none!important}
+}
+@media (min-width:901px){.mini{display:none!important}}
+@media (max-width:700px),(max-height:500px){
+ header{gap:6px;padding:0 10px}
+ .tools .t{display:none}
+ .tools .btn{padding:8px 11px;font-size:16px}
+ .size input{width:64px}
+ #lessonSel{max-width:none;flex:1 1 0;min-width:0;width:0}
+ header .sp{display:none}
+}
+@media (max-width:560px){h1{font-size:16px}h1 span+small{display:none}.pill{display:none}#timerBtn{padding:8px 10px}}
+@media (max-height:500px){.app{grid-template-rows:48px 1fr}h1{font-size:16px}.pill{display:none}}
 </style>
 </head>
 <body>
@@ -96,7 +114,7 @@ summary{font-weight:800;cursor:pointer;font-size:14px;padding:4px 0}
   <select id="lessonSel" aria-label="Lição"></select>
   <div class="sp"></div>
   <div class="pill" id="streak">🔥 0 dias</div>
-  <button class="btn" id="timerBtn">⏱ Aquecimento 10 min</button>
+  <button class="btn" id="timerBtn" title="Aquecimento 10 min">⏱ Aquecimento 10 min</button>
   <button class="btn" id="bCfg" title="Configurar professor (Gemini)">⚙</button>
  </header>
  <div class="body">
@@ -104,14 +122,15 @@ summary{font-weight:800;cursor:pointer;font-size:14px;padding:4px 0}
   <div class="stage" id="stage">
    <canvas id="cv"></canvas>
    <div class="tools">
-    <button class="btn" id="bNew">↻ Nova guia</button>
-    <button class="btn" id="bUndo">↶ Desfazer</button>
-    <button class="btn" id="bClear">Limpar</button>
-    <button class="btn primary" id="bEval">✓ Avaliar</button>
-    <button class="btn" id="bAsk" style="background:#2f6ea8;border-color:#2f6ea8;color:#fff">🧑‍🏫 Professor</button>
-    <button class="btn" id="bPen"title="Ignora toques da mão na tela">✍ Só caneta</button>
-    <label class="size">Traço <input type="range" id="bSize" min="1" max="10" value="3"></label>
+    <button class="btn" id="bNew" title="Nova guia">↻<span class="t"> Nova guia</span></button>
+    <button class="btn" id="bUndo" title="Desfazer">↶<span class="t"> Desfazer</span></button>
+    <button class="btn" id="bClear" title="Limpar">🧽<span class="t"> Limpar</span></button>
+    <button class="btn primary" id="bEval" title="Avaliar">✓<span class="t"> Avaliar</span></button>
+    <button class="btn" id="bAsk" style="background:#2f6ea8;border-color:#2f6ea8;color:#fff" title="Professor">🧑‍🏫<span class="t"> Professor</span></button>
+    <button class="btn" id="bPen"title="Ignora toques da mão na tela">✍<span class="t"> Só caneta</span></button>
+    <label class="size"><span class="t">Traço </span><input type="range" id="bSize" min="1" max="10" value="3"></label>
    </div>
+   <div class="mini" id="mini" hidden></div>
   </div>
   <aside id="panel">
    <div class="mod" id="pMod"></div>
@@ -222,6 +241,8 @@ const cv=$('#cv'),ctx=cv.getContext('2d');
 let W=0,H=0,DPR=1,G=null;
 const S={li:0,strokes:[],cur:null,feedback:null,info:'',scored:false,penOnly:false,penSeen:false,shape:0,vp:null,obj:null};
 const lesson=()=>LESSONS[S.li];
+const PHONE=Math.min(screen.width,screen.height)<520;
+const DEV=PHONE?{name:'Galaxy S23 Ultra',desc:'celular Galaxy S23 Ultra com S Pen',tip:'No celular o espaço é menor: deite o aparelho (horizontal) pra ter mais área. A S Pen tem pressão igual à da Smart Pen, e o botão dela desfaz o último traço. Traços longos de ombro ficam mais fáceis no tablet; use o celular pra treinos rápidos.'}:{name:'Xiaomi Pad 5',desc:'tablet Xiaomi Pad 5 com caneta',tip:''};
 
 // ---------- desenho ----------
 function dot(c,x,y,col,r=7){c.beginPath();c.arc(x,y,r,0,7);c.fillStyle=col;c.fill();c.beginPath();c.arc(x,y,r+7,0,7);c.strokeStyle=col;c.globalAlpha=.35;c.lineWidth=2;c.stroke();c.globalAlpha=1}
@@ -292,7 +313,7 @@ ellipses:{
   return{score:sc,parts:{'Encaixe':fit,'Volta completa':cov},msgs:m,ideal:c=>{c.strokeStyle=OK;c.lineWidth=2;c.beginPath();c.ellipse(o.x,o.y,a,b,rot,0,7);c.stroke()}}}
 },
 hatch:{
- newGuide(){const w=Math.min(W*.45,380),h=w*.7;G={x:rand(30,W-w-30),y:rand(80,Math.max(81,H-h-30)),w,h,ang:[45,135,0,90,30,150][Math.floor(Math.random()*6)]}},
+ newGuide(){const w=W<700?Math.min(W*.8,H*.8):Math.min(W*.45,380),h=w*.7;G={x:rand(30,W-w-30),y:rand(80,Math.max(81,H-h-30)),w,h,ang:[45,135,0,90,30,150][Math.floor(Math.random()*6)]}},
  draw(c){c.strokeStyle=GUIDE;c.lineWidth=2;c.setLineDash([8,8]);c.strokeRect(G.x,G.y,G.w,G.h);c.setLineDash([]);const r=G.ang*Math.PI/180,cx=G.x+G.w+0,cy=G.y-22,L=22;c.lineWidth=3;c.beginPath();c.moveTo(G.x+20-Math.cos(r)*L,cy-Math.sin(r)*L*.6);c.lineTo(G.x+20+Math.cos(r)*L,cy+Math.sin(r)*L*.6);c.stroke();label(c,'direção',G.x+52,cy+5)},
  stroke(){const n=S.strokes.length;return{info:n<5?`${n} linha${n===1?'':'s'}: faça pelo menos 5.`:`${n} linhas. Toque em ✓ Avaliar quando terminar.`}},
  evaluate(){const ss=S.strokes.filter(s=>lineDev(s.pts).L>15);if(ss.length<5){toast('Faça pelo menos 5 linhas antes de avaliar.');return null}
@@ -350,6 +371,7 @@ function pt(e){const r=cv.getBoundingClientRect();let p=e.pressure;if(e.pointerT
 cv.addEventListener('pointerdown',e=>{
  if(e.pointerType==='pen'&&!S.penSeen){S.penSeen=true;setPen(true);toast('Caneta detectada ✍ toques da mão serão ignorados')}
  if(S.penOnly&&e.pointerType==='touch')return;if(e.pointerType==='mouse'&&e.button!==0)return;
+ if(e.pointerType==='pen'&&(e.buttons&(2|32))){e.preventDefault();$('#bUndo').click();toast('Botão da caneta: desfazer');return}
  if(S.cur)return;e.preventDefault();
  if(S.scored){const k=lesson().kind;if(k==='trace')S.shape++;newAttempt(false)}
  try{cv.setPointerCapture(e.pointerId)}catch(_){}
@@ -374,7 +396,9 @@ $('#bSize').oninput=req;
 // ---------- painel ----------
 function scoreCol(v){return v>=80?'var(--ok)':v>=60?'var(--warn)':'var(--bad)'}
 function scoreLab(v){return v>=90?'Excelente':v>=80?'Muito bom':v>=70?'Bom':v>=55?'Quase lá':'Continue tentando'}
-function renderFeedback(){const f=S.feedback,el=$('#fb');
+function renderMini(){const m=$('#mini'),f=S.feedback;if(f){m.innerHTML=`<span class="big" style="color:${scoreCol(f.score)}">${f.score}</span><span>${f.msgs[0]}</span>`;m.hidden=false}else if(S.info){m.innerHTML=`<span>${S.info}</span>`;m.hidden=false}else m.hidden=true}
+$('#mini').onclick=()=>$('#fb').scrollIntoView({behavior:'smooth'});
+function renderFeedback(){renderMini();const f=S.feedback,el=$('#fb');
  if(f){el.innerHTML=`<div class="score"><span class="big" style="color:${scoreCol(f.score)}">${f.score}</span><span class="lab">${scoreLab(f.score)}</span></div>`+
   Object.entries(f.parts||{}).map(([k,v])=>`<div class="part"><span>${k}</span><div class="bar"><i style="width:${Math.round(v)}%;background:${scoreCol(v)}"></i></div><span>${Math.round(v)}</span></div>`).join('')+
   `<ul class="msgs">${f.msgs.map(m=>`<li>${m}</li>`).join('')}</ul><div class="legend">${f.legend||'Em verde: o ideal.'} Encoste a caneta pra próxima.</div>`}
@@ -399,14 +423,14 @@ function renderNav(){let h='',mod='';LESSONS.forEach((L,i)=>{if(L.mod!==mod){mod
 $('#lessonSel').onchange=e=>goLesson(+e.target.value);
 function goLesson(i){S.li=i;$('#ai').style.display='none';P.last=i;save();const L=lesson();
  $('#pMod').textContent=L.mod;$('#pTitle').textContent=L.title;$('#pWhy').textContent=L.why;$('#pTask').innerHTML=L.task;
- $('#pTheory').innerHTML=L.theory.map(t=>`<li>${t}</li>`).join('');$('#pTip').innerHTML='<b>📱 No Xiaomi Pad 5</b>'+L.tip;
+ $('#pTheory').innerHTML=L.theory.map(t=>`<li>${t}</li>`).join('');$('#pTip').innerHTML=`<b>📱 No ${DEV.name}</b>`+(PHONE&&L.id==='caneta'?DEV.tip:L.tip);
  const free=['free','study'].includes(L.kind);$('#bNew').style.display=free?'none':'';$('#bEval').style.display=L.manual?'':'none';
  S.vp=null;S.obj=S.obj||null;renderNav();renderExtra();renderProgress();newAttempt(true)}
 
 // ---------- timer ----------
-const T={end:0,id:0,label:''};const TDEF='⏱ Aquecimento 10 min';
+const T={end:0,id:0,label:''};const TDEF=innerWidth<700?'⏱ 10min':'⏱ Aquecimento 10 min';
 function startTimer(min,lab){clearInterval(T.id);T.end=Date.now()+min*60000;T.label=lab;tick();T.id=setInterval(tick,500)}
-function tick(){const left=Math.max(0,T.end-Date.now()),m=Math.floor(left/60000),s=Math.floor(left/1000)%60;$('#timerBtn').textContent=`⏹ ${T.label} ${m}:${String(s).padStart(2,'0')}`;$('#timerBtn').classList.add('on');if(left<=0){clearInterval(T.id);T.id=0;$('#timerBtn').textContent=TDEF;$('#timerBtn').classList.remove('on');toast('⏰ Tempo! Bom trabalho.')}}
+function tick(){const left=Math.max(0,T.end-Date.now()),m=Math.floor(left/60000),s=Math.floor(left/1000)%60;$('#timerBtn').textContent=`⏹ ${innerWidth<700?'':T.label+' '}${m}:${String(s).padStart(2,'0')}`;$('#timerBtn').classList.add('on');if(left<=0){clearInterval(T.id);T.id=0;$('#timerBtn').textContent=TDEF;$('#timerBtn').classList.remove('on');toast('⏰ Tempo! Bom trabalho.')}}
 $('#timerBtn').onclick=()=>{if(T.id){clearInterval(T.id);T.id=0;$('#timerBtn').textContent=TDEF;$('#timerBtn').classList.remove('on')}else startTimer(10,'Aquecimento')};
 
 // ---------- tamanho ----------
@@ -425,7 +449,7 @@ $('#cSave').onclick=()=>{const key=$('#cKey').value.trim(),model=$('#cModel').va
 $('#cDel').onclick=()=>{setCfg({});$('#cKey').value='';toast('Chave removida.')};
 function snapshot(){const max=1280,sc=Math.min(1,max/W),o=document.createElement('canvas');o.width=Math.round(W*sc);o.height=Math.round(H*sc);o.getContext('2d').drawImage(cv,0,0,o.width,o.height);return o}
 function buildPrompt(){const L=lesson(),strip=h=>h.replace(/<[^>]+>/g,'');
- return`Você é um professor de desenho paciente e direto, ensinando um adulto iniciante que desenha num tablet Xiaomi Pad 5 com caneta.
+ return`Você é um professor de desenho paciente e direto, ensinando um adulto iniciante que desenha num ${DEV.desc}.
 Lição atual: "${L.title}". Exercício: ${strip(L.task)}${S.obj?` Objeto sorteado: ${S.obj}.`:''}${S.feedback?` Nota automática desta tentativa: ${S.feedback.score}/100 (${Object.entries(S.feedback.parts).map(([k,v])=>k+' '+Math.round(v)).join(', ')}).`:''}
 Na imagem: guias do exercício em azul, traços do aluno em marrom escuro (mais grossos = mais pressão), e o ideal em verde quando houver.
 Responda em português do Brasil, tom informal e encorajador, sem markdown, no máximo 5 frases curtas: 1 acerto concreto, 2 correções específicas sobre o que você vê (onde e como), e 1 mini-exercício pra próxima tentativa.`}
@@ -444,6 +468,7 @@ $('#bAsk').onclick=async()=>{if(asking)return;const cfg=getCfg();
  catch(e){const c=e&&e.code;out(c==='rate_limited'?'Muitos pedidos seguidos (ou cota grátis esgotada). Espera um pouco e tenta de novo.':c==='key'?'A chave do Gemini foi recusada. Confira em ⚙.':c==='model'?'Modelo não encontrado. Troque o nome do modelo em ⚙.':c==='not_granted'?'Sem permissão pra chamar o professor aqui.':'Não consegui analisar agora. Confira a internet e tenta de novo.')}
  finally{asking=false}};
 
+$('#timerBtn').textContent=TDEF;
 renderStreak();
 const start=Number.isInteger(P.last)&&P.last<LESSONS.length?P.last:0;
 resize();goLesson(start);
