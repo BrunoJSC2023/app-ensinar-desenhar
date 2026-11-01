@@ -3,7 +3,8 @@
 App web (um único `index.html`) para aprender a desenhar do zero num tablet com caneta, pensado para o **Xiaomi Pad 5 + Xiaomi Smart Pen** e também para celular, como o **Galaxy S23 Ultra + S Pen** (layout vertical e horizontal; botão da S Pen desfaz o último traço).
 
 ## O que tem
-- Trilha de 9 lições: caneta, linhas retas, pressão, círculos, elipses, hachura, perspectiva de 1 ponto, formas em volume e estudo de objeto.
+- Trilha de 15 lições: caneta, linhas retas, pressão, círculos, elipses, hachura, perspectiva de 1 ponto, formas em volume, estudo de objeto e o módulo **Seus personagens**.
+- **Seus personagens**: suba a folha de referência de cada personagem da sua HQ e treine estrutura, silhueta, expressões, ângulos, poses e desenho de memória. A referência pode ficar ao lado, por baixo (decalque) ou sumir após 20 s (memória), e o Professor compara seu desenho com a referência.
 - Guias na tela e **nota automática** a cada traço (retidão, precisão, fechamento, pressão etc.), com o ideal em verde e dicas do que corrigir.
 - Rejeição de palma automática quando a caneta é detectada, timer de aquecimento, sequência de dias e progresso salvos no navegador.
 - **🧑‍🏫 Professor com IA**: manda o desenho para análise e recebe um acerto, duas correções e um mini-exercício.

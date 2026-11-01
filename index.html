@@ -76,6 +76,12 @@ summary{font-weight:800;cursor:pointer;font-size:14px;padding:4px 0}
 .dlg a{color:var(--accent);font-weight:700}
 .fl{display:block;font-weight:700;font-size:13px;margin-bottom:10px}
 .fl input{display:block;width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;-webkit-user-select:text;user-select:text}
+.chrow{display:flex;gap:8px;width:100%;align-items:center}
+.chrow select{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--card)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.seg .btn{padding:6px 12px;font-size:13px}
+.fl textarea{display:block;width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;font-weight:400;background:#fff;resize:vertical;-webkit-user-select:text;user-select:text}
+#pExtra .fl input,#pExtra textarea{-webkit-user-select:text;user-select:text}
 #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;transition:.25s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media (max-width:1100px){.body{grid-template-columns:190px 1fr 300px}}
@@ -204,7 +210,44 @@ const LESSONS=[
  why:'Agora junte tudo: desenhe objetos reais olhando pra eles.',
  task:'Sorteie um objeto, pegue ele em casa, coloque na sua frente, inicie o timer de 5 min e desenhe. Faça <b>3 sessões</b>.',
  theory:['Primeiro encontre as formas básicas (caneca = cilindro + alça).','Esboce leve, com pouca pressão; depois reforce o contorno final com mais pressão.','5 minutos por objeto. Não busque perfeição, busque observar.'],
- tip:'Em estudos mais longos, use camadas no app: uma pro esboço (opacidade baixa) e outra pra linha final.'}
+ tip:'Em estudos mais longos, use camadas no app: uma pro esboço (opacidade baixa) e outra pra linha final.'},
+{id:'p-formas',mod:'5 · Seus personagens',title:'Desmontar o personagem',kind:'char',mode:'decalque',goal:{sessions:3},
+ why:'Todo personagem, por mais detalhado, é feito de poucas formas grandes. Achar essas formas é o primeiro passo pra conseguir redesenhá-lo sozinho.',
+ task:'Com a referência por baixo (<b>decalque</b>), desenhe <b>só a estrutura</b>: linha de ação, cabeça (esfera), tronco, quadril e cilindros de braços e pernas. Nada de detalhe ainda.',
+ prompts:['corpo inteiro','cabeça e ombros','tronco e quadril','braços e mãos como blocos'],
+ theory:['Comece pela <b>linha de ação</b>: uma curva que atravessa o corpo inteiro e dá o movimento.','Cabeça = esfera; tronco = caixa ou feijão; braços e pernas = cilindros; mãos e pés = blocos.','Meça a proporção em "cabeças": quantas cabeças de altura o personagem tem? Anote nas notas do personagem.','Decalcar aqui é estudo, não trapaça: o objetivo é entender a estrutura por baixo do desenho.'],
+ tip:'Deixe a referência em 30–40% de opacidade pra enxergar seus traços. No app de desenho, repita isso com a referência numa camada e a estrutura em outra.'},
+{id:'p-silhueta',mod:'5 · Seus personagens',title:'Silhueta e proporção',kind:'char',mode:'lado',goal:{sessions:3},
+ why:'O leitor reconhece um personagem pela silhueta antes do rosto. Silhueta certa é metade do caminho.',
+ task:'Com a referência <b>ao lado</b>, desenhe o contorno externo do personagem: cabelo, roupa, acessórios. Depois peça a comparação ao 🧑‍🏫 Professor.',
+ prompts:['de frente, corpo inteiro','da cintura pra cima','só a cabeça com o cabelo'],
+ theory:['Olhe mais pra referência do que pro seu desenho.','Compare os espaços vazios: entre o braço e o corpo, entre as pernas, em volta do cabelo.','Marque primeiro o topo da cabeça e a ponta do pé pra fixar o tamanho; depois a linha da cintura.'],
+ tip:'Se o espaço apertar, deite o aparelho: a referência fica de um lado e o desenho do outro.'},
+{id:'p-cabeca',mod:'5 · Seus personagens',title:'Cabeça e expressões',kind:'char',mode:'lado',goal:{sessions:4},
+ why:'No quadrinho, o rosto conta a emoção. O personagem precisa continuar reconhecível em qualquer expressão.',
+ task:'Sorteie uma expressão e desenhe a cabeça do personagem com ela. Comece pela esfera + cruz guia (linha do meio e linha dos olhos).',
+ prompts:['neutro','sorrindo','bravo','assustado','triste','surpreso','sonolento','determinado','desconfiado','chorando'],
+ theory:['Cabeça = esfera + mandíbula. Cruz guia: vertical no meio do rosto, horizontal na altura dos olhos.','A emoção mora nas sobrancelhas, nas pálpebras e na boca. Mude só isso; formato da cabeça e do cabelo ficam iguais.','Os traços marcantes (cabelo, cicatriz, acessório) aparecem em todas as expressões.'],
+ tip:'Faça várias cabeças pequenas na mesma tela, uma por expressão, como numa folha de modelo.'},
+{id:'p-angulos',mod:'5 · Seus personagens',title:'Ângulos (turnaround)',kind:'char',mode:'lado',goal:{sessions:4},
+ why:'Num quadrinho o personagem aparece de todos os lados. Sem treinar ângulos, ele muda de cara a cada quadro.',
+ task:'Desenhe a cabeça (ou o corpo) no ângulo sorteado. As alturas de olhos, nariz, boca e queixo são as mesmas da referência.',
+ prompts:['frente','3/4 virado pra esquerda','3/4 virado pra direita','perfil','de costas','olhando pra cima','olhando pra baixo'],
+ theory:['Puxe linhas horizontais na altura do topo da cabeça, olhos, nariz, boca e queixo. Elas não mudam com o ângulo.','No 3/4, a linha do meio do rosto se curva e o olho do fundo fica menor e mais estreito.','No perfil, o olho vira um triângulo e o nariz e o queixo definem a silhueta.'],
+ tip:'Desenhe ao lado de uma versão anterior sua, não só da referência: consistência entre os seus desenhos é o objetivo.'},
+{id:'p-poses',mod:'5 · Seus personagens',title:'Poses e gesto',kind:'char',mode:'lado',goal:{sessions:5},timer:1,
+ why:'Personagem parado não conta história. O gesto é o que dá vida ao quadro.',
+ task:'Sorteie uma pose, inicie o timer de <b>1 min</b> e desenhe o personagem nela: linha de ação primeiro, depois formas grandes. Rápido e solto.',
+ prompts:['correndo','sentado no chão','olhando pra trás assustado','pulando','agachado se escondendo','deitado dormindo','apontando pra frente','carregando algo pesado','braços cruzados','caindo','andando de olhos fechados','estendendo a mão pra alguém'],
+ theory:['Em 1 minuto: só linha de ação e massas. Detalhe atrapalha.','Exagere a curva: pose tímida no papel parece dura.','Peso: em qual pé o corpo se apoia? O quadril sobe do lado do apoio e o ombro desce.'],
+ tip:'Faça 5 poses seguidas de 1 min antes de marcar a sessão. Quantidade vence perfeição aqui.'},
+{id:'p-memoria',mod:'5 · Seus personagens',title:'De memória',kind:'char',mode:'memoria',goal:{sessions:4},
+ why:'Desenhar de memória é o que fixa o personagem na sua mão. É o teste final antes de usar ele nas páginas.',
+ task:'Observe a referência por <b>20 segundos</b>. Ela some e você desenha de memória. Pode espiar 3 s com 👁, mas cada espiada fica registrada.',
+ prompts:['corpo inteiro de frente','só a cabeça','em 3/4','numa pose sorteada por você'],
+ theory:['Ao observar, fale em voz alta: "cabelo pra cima em 3 mechas, casaco longo, 6 cabeças de altura".','Desenhe tudo antes de espiar. Espiar cedo demais não treina a memória.','Depois compare: o que você esqueceu? Esse é o foco da próxima rodada.'],
+ tip:'Faça uma rodada por dia. Em uma semana você vai notar o personagem saindo sozinho.'}
+
 ];
 const OBJECTS=['caneca','garrafa','livro aberto','celular','tênis','controle remoto','copo','maçã','cadeira','luminária','chaves','mochila','óculos','panela','tesoura','almofada'];
 const GUIDE='#5b9bd5',OK='#3a9d6a',INK='#2a2420';
@@ -248,9 +291,9 @@ const DEV=PHONE?{name:'Galaxy S23 Ultra',desc:'celular Galaxy S23 Ultra com S Pe
 function dot(c,x,y,col,r=7){c.beginPath();c.arc(x,y,r,0,7);c.fillStyle=col;c.fill();c.beginPath();c.arc(x,y,r+7,0,7);c.strokeStyle=col;c.globalAlpha=.35;c.lineWidth=2;c.stroke();c.globalAlpha=1}
 function poly(c,pts,close){c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));if(close)c.closePath();c.stroke()}
 function label(c,t,x,y,col=GUIDE,al='left'){c.font='700 14px "Nunito Sans",sans-serif';c.fillStyle=col;c.textAlign=al;c.fillText(t,x,y)}
-function drawStroke(s){const base=+$('#bSize').value;const pts=s.pts;ctx.strokeStyle=INK;ctx.lineCap='round';ctx.lineJoin='round';
- if(s.type!=='pen'){ctx.lineWidth=base*1.2;poly(ctx,pts);return}
- for(let i=1;i<pts.length;i++){ctx.lineWidth=base*(.25+1.6*((pts[i].p+pts[i-1].p)/2));ctx.beginPath();ctx.moveTo(pts[i-1].x,pts[i-1].y);ctx.lineTo(pts[i].x,pts[i].y);ctx.stroke()}}
+function drawStroke(s,c=ctx){const base=+$('#bSize').value;const pts=s.pts;c.strokeStyle=INK;c.lineCap='round';c.lineJoin='round';
+ if(s.type!=='pen'){c.lineWidth=base*1.2;poly(c,pts);return}
+ for(let i=1;i<pts.length;i++){c.lineWidth=base*(.25+1.6*((pts[i].p+pts[i-1].p)/2));c.beginPath();c.moveTo(pts[i-1].x,pts[i-1].y);c.lineTo(pts[i].x,pts[i].y);c.stroke()}}
 let raf=0;function req(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;render()})}
 function render(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#fcf9f2';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(42,36,32,.07)';for(let x=16;x<W;x+=32)for(let y=16;y<H;y+=32)ctx.fillRect(x-1,y-1,2,2);
  const ex=EX[lesson().kind];ctx.save();ex.draw&&ex.draw(ctx);ctx.restore();ctx.setLineDash([]);
@@ -260,6 +303,13 @@ function render(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#fcf9f2';ctx.fillRect(0,
 // ---------- exercícios ----------
 const EX={
 free:{},study:{},
+char:{draw(c){const ch=curChar(),img=ch&&CHIMG[ch.id];
+ if(!ch){label(c,'Adicione um personagem no painel: ＋ Personagem',W/2,H/2,GUIDE,'center');return}
+ if(!img||!img.complete)return;const m=S.cmode;
+ if(m==='decalque'){const r=fitRect(img,10,60,W-20,H-70);c.globalAlpha=CH.op;c.drawImage(img,r.x,r.y,r.w,r.h);c.globalAlpha=1;return}
+ const showMem=m==='memoria'&&S.memUntil>Date.now();if(m==='lado'||showMem){const b=refBox();c.fillStyle='#fff';c.strokeStyle='#e6ddcd';c.lineWidth=1.5;c.fillRect(b.x,b.y,b.w,b.h);c.strokeRect(b.x,b.y,b.w,b.h);const r=fitRect(img,b.x+6,b.y+6,b.w-12,b.h-12);c.drawImage(img,r.x,r.y,r.w,r.h);
+  if(showMem){const left=Math.ceil((S.memUntil-Date.now())/1000);label(c,`some em ${left}s`,b.x+b.w/2,b.y+b.h-10,'#c8553d','center');clearTimeout(S.memT);S.memT=setTimeout(req,250)}}
+ else if(m==='memoria')label(c,`de memória · espiadas: ${S.peeks}`,W-16,H-16,GUIDE,'right')}},
 lines:{
  newGuide(){const m=60,mn=Math.min(W,H);for(let i=0;i<80;i++){const L=rand(mn*.3,mn*.75),an=rand(0,Math.PI*2),a={x:rand(m,W-m),y:rand(m+50,H-m)},b={x:a.x+Math.cos(an)*L,y:a.y+Math.sin(an)*L};if(b.x>m&&b.x<W-m&&b.y>m+50&&b.y<H-m){G={a,b};return}}G={a:{x:W*.25,y:H*.6},b:{x:W*.75,y:H*.4}}},
  draw(c){dot(c,G.a.x,G.a.y,GUIDE);dot(c,G.b.x,G.b.y,GUIDE)},
@@ -411,7 +461,7 @@ function renderProgress(){const L=lesson(),R=rec(L),g=L.goal;let h='';
  if(g.sessions)h=`<div class="row"><b>Meta:</b><span>${Math.min(R.sessions,g.sessions)}/${g.sessions} sessões</span></div><div class="bar"><i style="width:${Math.min(100,R.sessions/g.sessions*100)}%;background:var(--guide)"></i></div>`;
  if(R.done)h+=`<div style="margin-top:8px"><span class="done-badge">✓ Concluída</span> <span style="color:var(--muted)">continue praticando quando quiser</span></div>`;
  $('#prog').innerHTML=h}
-function renderExtra(){const L=lesson(),el=$('#pExtra');if(L.kind!=='study'){el.innerHTML='';return}
+function renderExtra(){const L=lesson(),el=$('#pExtra');if(L.kind==='char'){renderChar(L,el);return}if(L.kind!=='study'){el.innerHTML='';return}
  el.innerHTML=`<div class="obj" id="objName">${S.obj||'—'}</div><button class="btn" id="bObj">🎲 Sortear objeto</button><button class="btn" id="bT5">⏱ Timer 5 min</button><button class="btn primary" id="bSess">✓ Terminei a sessão</button>`;
  $('#bObj').onclick=()=>{let o;do{o=OBJECTS[Math.floor(Math.random()*OBJECTS.length)]}while(o===S.obj&&OBJECTS.length>1);S.obj=o;$('#objName').textContent=o};
  $('#bT5').onclick=()=>startTimer(5,'Estudo');
@@ -424,8 +474,44 @@ $('#lessonSel').onchange=e=>goLesson(+e.target.value);
 function goLesson(i){S.li=i;$('#ai').style.display='none';P.last=i;save();const L=lesson();
  $('#pMod').textContent=L.mod;$('#pTitle').textContent=L.title;$('#pWhy').textContent=L.why;$('#pTask').innerHTML=L.task;
  $('#pTheory').innerHTML=L.theory.map(t=>`<li>${t}</li>`).join('');$('#pTip').innerHTML=`<b>📱 No ${DEV.name}</b>`+(PHONE&&L.id==='caneta'?DEV.tip:L.tip);
- const free=['free','study'].includes(L.kind);$('#bNew').style.display=free?'none':'';$('#bEval').style.display=L.manual?'':'none';
+ const free=['free','study','char'].includes(L.kind);if(L.kind==='char'){S.cmode=L.mode;S.cprompt=null;S.peeks=0;S.memUntil=L.mode==='memoria'&&curChar()?Date.now()+20000:0}$('#bNew').style.display=free?'none':'';$('#bEval').style.display=L.manual?'':'none';
  S.vp=null;S.obj=S.obj||null;renderNav();renderExtra();renderProgress();newAttempt(true)}
+
+// ---------- personagens ----------
+const CH_KEY='atelieTab5.chars';const CHIMG={};
+let CH={list:[],cur:null,op:.35};
+try{const o=JSON.parse(localStorage.getItem(CH_KEY)||'null');if(o&&Array.isArray(o.list))CH=Object.assign(CH,o)}catch(e){}
+function saveCh(){try{localStorage.setItem(CH_KEY,JSON.stringify(CH));return true}catch(e){return false}}
+function curChar(){return CH.list.find(c=>c.id===CH.cur)||CH.list[0]||null}
+function loadImg(ch){if(CHIMG[ch.id])return;const im=new Image();im.onload=req;im.src=ch.img;CHIMG[ch.id]=im}
+CH.list.forEach(loadImg);
+function fitRect(img,x,y,w,h){const s=Math.min(w/img.naturalWidth,h/img.naturalHeight);const iw=img.naturalWidth*s,ih=img.naturalHeight*s;return{x:x+(w-iw)/2,y:y+(h-ih)/2,w:iw,h:ih}}
+function refBox(){return W>=H?{x:W-Math.round(W*.34)-10,y:60,w:Math.round(W*.34),h:H-70}:{x:10,y:60,w:W-20,h:Math.round(H*.34)}}
+function readImage(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=rej;fr.onload=()=>{const im=new Image();im.onerror=rej;im.onload=()=>{const max=1000,sc=Math.min(1,max/Math.max(im.width,im.height)),o=document.createElement('canvas');o.width=Math.round(im.width*sc);o.height=Math.round(im.height*sc);const c=o.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,o.width,o.height);c.drawImage(im,0,0,o.width,o.height);res(o.toDataURL('image/jpeg',.85))};im.src=fr.result};fr.readAsDataURL(file)})}
+function renderChar(L,el){const ch=curChar(),m=S.cmode;
+ el.innerHTML=`<div class="chrow"><select id="chSel">${CH.list.map(c=>`<option value="${c.id}" ${ch&&c.id===ch.id?'selected':''}>${esc(c.name)}</option>`).join('')||'<option>— nenhum —</option>'}</select><button class="btn" id="chAdd">＋ Personagem</button>${ch?'<button class="btn" id="chDel" title="Remover personagem">🗑</button>':''}<input type="file" id="chFile" accept="image/*" hidden></div>`+
+ (ch?`<label class="fl">Nome<input id="chName" value="${esc(ch.name)}"></label>
+ <div class="seg">${[['lado','Ao lado'],['decalque','Decalque'],['memoria','Memória'],['sem','Sem ref.']].map(([k,t])=>`<button class="btn ${m===k?'on':''}" data-m="${k}">${t}</button>`).join('')}</div>
+ ${m==='decalque'?`<label class="fl">Opacidade da referência<input type="range" id="chOp" min="10" max="80" value="${Math.round(CH.op*100)}" style="padding:0"></label>`:''}
+ <div class="obj" id="chPrompt">${S.cprompt||'—'}</div>
+ <button class="btn" id="chRoll">🎲 Sortear pedido</button>${L.timer?`<button class="btn" id="chT">⏱ Timer ${L.timer} min</button>`:''}${m==='memoria'?'<button class="btn" id="chPeek">👁 Espiar 3s</button><button class="btn" id="chObs">↻ Observar de novo</button>':''}<button class="btn primary" id="chSess">✓ Terminei a sessão</button>
+ <label class="fl" style="width:100%">Notas do personagem (proporção, traços marcantes, cores)<textarea id="chNotes" rows="3" placeholder="ex.: 6 cabeças de altura, cabelo em 3 mechas pra cima, olheiras, casaco longo">${esc(ch.notes||'')}</textarea></label>`
+ :`<p class="why" style="width:100%">Suba a folha de referência de um personagem da sua HQ (imagem de frente, corpo inteiro, de preferência). Ela fica salva só neste aparelho.</p>`);
+ $('#chAdd').onclick=()=>$('#chFile').click();
+ $('#chFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const img=await readImage(f);const c={id:'c'+Date.now(),name:f.name.replace(/\.[^.]+$/,'').slice(0,40)||'Personagem',notes:'',img};CH.list.push(c);CH.cur=c.id;loadImg(c);if(!saveCh())toast('A imagem não coube no armazenamento do navegador: vai sumir ao fechar.');else toast('Personagem adicionado. Ajuste o nome se quiser.');if(S.cmode==='memoria')S.memUntil=Date.now()+20000;renderExtra();req()}catch(_){toast('Não consegui ler essa imagem.')}};
+ if(!ch)return;
+ $('#chSel').onchange=e=>{CH.cur=e.target.value;saveCh();S.memUntil=S.cmode==='memoria'?Date.now()+20000:0;S.peeks=0;renderExtra();req()};
+ $('#chDel').onclick=()=>{const b=$('#chDel');if(b.dataset.ok){CH.list=CH.list.filter(c=>c.id!==ch.id);delete CHIMG[ch.id];CH.cur=CH.list[0]?CH.list[0].id:null;saveCh();renderExtra();req()}else{b.dataset.ok=1;b.textContent='Confirmar?';setTimeout(()=>{if(b.isConnected){delete b.dataset.ok;b.textContent='🗑'}},3000)}};
+ $('#chName').onchange=e=>{ch.name=e.target.value.trim()||ch.name;saveCh();renderExtra()};
+ $('#chNotes').onchange=e=>{ch.notes=e.target.value.trim();saveCh()};
+ el.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.cmode=b.dataset.m;if(S.cmode==='memoria'){S.memUntil=Date.now()+20000;S.peeks=0}renderExtra();req()});
+ const op=$('#chOp');if(op)op.oninput=e=>{CH.op=e.target.value/100;saveCh();req()};
+ $('#chRoll').onclick=()=>{const ps=L.prompts;let p;do{p=ps[Math.floor(Math.random()*ps.length)]}while(p===S.cprompt&&ps.length>1);S.cprompt=p;$('#chPrompt').textContent=p};
+ const t=$('#chT');if(t)t.onclick=()=>startTimer(L.timer,'Pose');
+ const pk=$('#chPeek');if(pk)pk.onclick=()=>{S.peeks++;S.memUntil=Date.now()+3000;req()};
+ const ob=$('#chObs');if(ob)ob.onclick=()=>{S.memUntil=Date.now()+20000;S.peeks=0;S.strokes=[];req()};
+ $('#chSess').onclick=()=>{if(!S.strokes.length){toast('Desenhe antes de marcar a sessão.');return}const R=rec(L);R.sessions++;save();checkDone(L);renderProgress();toast('Sessão registrada! ('+R.sessions+')');S.strokes=[];S.peeks=0;if(S.cmode==='memoria')S.memUntil=Date.now()+20000;$('#ai').style.display='none';req()}}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 
 // ---------- timer ----------
 const T={end:0,id:0,label:''};const TDEF=innerWidth<700?'⏱ 10min':'⏱ Aquecimento 10 min';
@@ -448,13 +534,20 @@ $('#cfg').onclick=e=>{if(e.target.id==='cfg')$('#cfg').hidden=true};
 $('#cSave').onclick=()=>{const key=$('#cKey').value.trim(),model=$('#cModel').value.trim();if(!setCfg({key,model})){toast('Este navegador não deixou salvar a chave.');return}$('#cfg').hidden=true;toast(key?'Chave salva neste navegador.':'Sem chave salva.')};
 $('#cDel').onclick=()=>{setCfg({});$('#cKey').value='';toast('Chave removida.')};
 function snapshot(){const max=1280,sc=Math.min(1,max/W),o=document.createElement('canvas');o.width=Math.round(W*sc);o.height=Math.round(H*sc);o.getContext('2d').drawImage(cv,0,0,o.width,o.height);return o}
+function snapshotInk(){const max=1280,sc=Math.min(1,max/W),o=document.createElement('canvas');o.width=Math.round(W*sc);o.height=Math.round(H*sc);const c=o.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,o.width,o.height);c.scale(sc,sc);S.strokes.forEach(s=>drawStroke(s,c));return o}
 function buildPrompt(){const L=lesson(),strip=h=>h.replace(/<[^>]+>/g,'');
+ if(L.kind==='char'){const ch=curChar();return`Você é um professor de desenho de quadrinhos/mangá, paciente e direto, ensinando um adulto iniciante (desenha num ${DEV.desc}) a desenhar os personagens da própria HQ.
+Personagem: "${ch.name}".${ch.notes?` Notas do autor sobre ele: ${ch.notes}.`:''}
+Lição: "${L.title}". Exercício: ${strip(L.task)}${S.cprompt?` Pedido sorteado: ${S.cprompt}.`:''}${L.mode==='memoria'?` Desenho feito de memória, com ${S.peeks} espiada(s).`:''}
+Imagem 1: folha de referência do personagem. Imagem 2: desenho do aluno (só os traços dele).
+Compare o desenho com a referência considerando o objetivo da lição: estrutura e proporção (em cabeças), silhueta, traços marcantes que identificam o personagem, e se o pedido sorteado foi cumprido. Não cobre acabamento que a lição não pede.
+Responda em português do Brasil, tom informal e encorajador, sem markdown, no máximo 6 frases curtas: 1 acerto concreto, 2 ou 3 correções específicas comparando com a referência (onde e como corrigir), e 1 mini-exercício pra próxima tentativa.`}
  return`Você é um professor de desenho paciente e direto, ensinando um adulto iniciante que desenha num ${DEV.desc}.
 Lição atual: "${L.title}". Exercício: ${strip(L.task)}${S.obj?` Objeto sorteado: ${S.obj}.`:''}${S.feedback?` Nota automática desta tentativa: ${S.feedback.score}/100 (${Object.entries(S.feedback.parts).map(([k,v])=>k+' '+Math.round(v)).join(', ')}).`:''}
 Na imagem: guias do exercício em azul, traços do aluno em marrom escuro (mais grossos = mais pressão), e o ideal em verde quando houver.
 Responda em português do Brasil, tom informal e encorajador, sem markdown, no máximo 5 frases curtas: 1 acerto concreto, 2 correções específicas sobre o que você vê (onde e como), e 1 mini-exercício pra próxima tentativa.`}
-async function askGemini(prompt,key,model){const b64=snapshot().toDataURL('image/png').split(',')[1];
- const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt},{inlineData:{mimeType:'image/png',data:b64}}]}]})});
+async function askGemini(prompt,key,model,imgs){
+ const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt},...imgs.map(d=>({inlineData:{mimeType:d.slice(5,d.indexOf(';')),data:d.split(',')[1]}}))]}]})});
  const j=await res.json().catch(()=>({}));
  if(!res.ok){const msg=(j.error&&j.error.message)||'';throw{code:res.status===429?'rate_limited':res.status===404?'model':(res.status===400||res.status===403)?'key':'http',message:msg}}
  const t=((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('').trim();if(!t)throw{code:'empty'};return t}
@@ -462,10 +555,11 @@ $('#bAsk').onclick=async()=>{if(asking)return;const cfg=getCfg();
  if(!SAMPLE&&!cfg.key){openCfg();toast('Configure o professor primeiro.');return}
  if(!S.strokes.length){toast('Desenhe algo primeiro, aí o professor comenta.');return}
  asking=true;const box=$('#ai');box.style.display='';box.innerHTML=`<b>🧑‍🏫 Professor${SAMPLE?'':' (Gemini)'}</b><span id="aiT">Olhando seu desenho…</span>`;const out=t=>{const el=$('#aiT');if(el)el.textContent=t};
- try{const prompt=buildPrompt();
-  if(SAMPLE){const blob=await new Promise(r=>snapshot().toBlob(r,'image/png'));const r=await SAMPLE(prompt,{images:[blob],modelTier:'default',onText:({text})=>out(text)});out(r.text)}
-  else out(await askGemini(prompt,cfg.key,cfg.model||'gemini-2.5-flash'))}
- catch(e){const c=e&&e.code;out(c==='rate_limited'?'Muitos pedidos seguidos (ou cota grátis esgotada). Espera um pouco e tenta de novo.':c==='key'?'A chave do Gemini foi recusada. Confira em ⚙.':c==='model'?'Modelo não encontrado. Troque o nome do modelo em ⚙.':c==='not_granted'?'Sem permissão pra chamar o professor aqui.':'Não consegui analisar agora. Confira a internet e tenta de novo.')}
+ try{const L=lesson(),isChar=L.kind==='char';if(isChar&&!curChar())throw{code:'nochar'};const prompt=buildPrompt();
+  const urls=isChar?[curChar().img,snapshotInk().toDataURL('image/png')]:[snapshot().toDataURL('image/png')];
+  if(SAMPLE){const blobs=urls.map(u=>{const [h,d]=u.split(','),bin=atob(d),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:h.slice(5,h.indexOf(';'))})});const r=await SAMPLE(prompt,{images:blobs,modelTier:'default',onText:({text})=>out(text)});out(r.text)}
+  else out(await askGemini(prompt,cfg.key,cfg.model||'gemini-2.5-flash',urls))}
+ catch(e){const c=e&&e.code;out(c==='rate_limited'?'Muitos pedidos seguidos (ou cota grátis esgotada). Espera um pouco e tenta de novo.':c==='key'?'A chave do Gemini foi recusada. Confira em ⚙.':c==='model'?'Modelo não encontrado. Troque o nome do modelo em ⚙.':c==='nochar'?'Adicione a referência do personagem primeiro.':c==='not_granted'?'Sem permissão pra chamar o professor aqui.':'Não consegui analisar agora. Confira a internet e tenta de novo.')}
  finally{asking=false}};
 
 $('#timerBtn').textContent=TDEF;
